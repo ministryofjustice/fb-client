@@ -6,8 +6,8 @@
     {
       "files": [
         "lib/jwt/client.spec.js",
-        "lib/data-store/client.spec.js",
-        "lib/file-store/client.spec.js"
+        "lib/datastore/client.spec.js",
+        "lib/filestore/client.spec.js"
       ],
       "rules": {
         "no-new": "off"

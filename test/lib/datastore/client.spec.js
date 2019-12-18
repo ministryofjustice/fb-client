@@ -1,3 +1,5 @@
+require('@ministryofjustice/module-alias/register')
+
 const chai = require('chai')
 const sinon = require('sinon')
 const sinonChai = require('sinon-chai')
@@ -8,14 +10,14 @@ const {
 
 chai.use(sinonChai)
 
-const UserDataStoreClient = require('~/fb-user/data-store/client')
+const UserDataStoreClient = require('~/fb-user/datastore/client')
 
 const serviceSlug = 'testServiceSlug'
 const serviceToken = 'testServiceToken'
 const serviceSecret = 'testServiceSecret'
 const userDataStoreUrl = 'https://userdatastore'
 
-describe('~/fb-user/data-store/client', () => {
+describe('~/fb-user/datastore/client', () => {
   describe('Always', () => it('exports the class', () => expect(UserDataStoreClient).to.be.a('function')))
 
   describe('Instantiating a client', () => {

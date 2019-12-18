@@ -1,3 +1,5 @@
+require('@ministryofjustice/module-alias/register')
+
 const chai = require('chai')
 
 const {
