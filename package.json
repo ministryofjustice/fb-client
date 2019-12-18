@@ -6,7 +6,7 @@
   "scripts": {
     "lint": "eslint lib test",
     "lint:fix": "eslint lib test --fix",
-    "test": "mocha test --recursive"
+    "test": "mocha test --recursive --require @ministryofjustice/module-alias/register"
   },
   "author": "Form Builder Team <form-builder-team@digital.justice.gov.uk>",
   "repository": {

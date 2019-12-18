@@ -1,5 +1,3 @@
-require('@ministryofjustice/module-alias/register')
-
 const proxyquire = require('proxyquire')
 
 const chai = require('chai')
