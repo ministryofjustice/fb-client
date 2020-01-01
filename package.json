@@ -1,6 +1,6 @@
 {
   "name": "@ministryofjustice/fb-user",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Form Builder User Data Store, User File Store, and JSON Web Token Clients (for Node)",
   "main": "./lib/index.js",
   "scripts": {
