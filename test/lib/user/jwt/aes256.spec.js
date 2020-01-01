@@ -9,13 +9,13 @@ const {
 const {
   decrypt,
   encrypt
-} = require('~/fb-user/jwt/aes256')
+} = require('~/fb-client/user/jwt/aes256')
 
 const userToken = 'testUserToken'
 const encryptedData = 'RRqDeJRQlZULKx1NYql/imRmDsy9AZshKozgLuY='
 const decryptedData = '{"foo":"bar"}'
 
-describe('~/fb-user/jwt/aes256', () => {
+describe('~/fb-client/user/jwt/aes256', () => {
   // Decrypting user data
   describe('Decrypting', () => {
     describe('With a key and a value', () => {

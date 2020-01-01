@@ -18,7 +18,7 @@ chai.use(chaiAsPromised)
 const readFileStub = sinon.stub()
 const promisifyStub = sinon.stub().returns(readFileStub)
 
-const UserFileStoreClient = proxyquire('~/fb-user/filestore/client', {
+const UserFileStoreClient = proxyquire('~/fb-client/user/filestore/client', {
   util: {
     promisify: promisifyStub
   }
@@ -29,7 +29,7 @@ const serviceToken = 'testServiceToken'
 const serviceSecret = 'testServiceSecret'
 const userFileStoreUrl = 'https://userfilestore'
 
-describe('~/fb-user/filestore/client', () => {
+describe('~/fb-client/user/filestore/client', () => {
   describe('Always', () => it('exports the class', () => expect(UserFileStoreClient).to.be.a('function')))
 
   describe('Instantiating a client', () => {

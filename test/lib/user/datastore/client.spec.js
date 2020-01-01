@@ -10,14 +10,14 @@ const {
 
 chai.use(sinonChai)
 
-const UserDataStoreClient = require('~/fb-user/datastore/client')
+const UserDataStoreClient = require('~/fb-client/user/datastore/client')
 
 const serviceSlug = 'testServiceSlug'
 const serviceToken = 'testServiceToken'
 const serviceSecret = 'testServiceSecret'
 const userDataStoreUrl = 'https://userdatastore'
 
-describe('~/fb-user/datastore/client', () => {
+describe('~/fb-client/user/datastore/client', () => {
   describe('Always', () => it('exports the class', () => expect(UserDataStoreClient).to.be.a('function')))
 
   describe('Instantiating a client', () => {

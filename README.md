@@ -1,3 +1,7 @@
+# Client
+
+Clients for Email, SMS, Submitter, User Data Store, User File Store, and JWT.
+
 ## JSON Web Token client
 
 Base client for requests to endpoints which require a JSON Web Token for authentication.
@@ -6,7 +10,7 @@ Base client for requests to endpoints which require a JSON Web Token for authent
 
 ``` javascript
 // require the client class
-const FBJWTClient = require('@ministryofjustice/fb-user/jwt/client')
+const FBJWTClient = require('@ministryofjustice/fb-client/user/jwt/client')
 
 // create a client instance
 const jwtClient = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl, [errorClass])
@@ -122,7 +126,7 @@ Client for requests to datastore endpoints.
 
 ``` javascript
 // load client
-const FBUserDataStoreClient = require('@ministryofjustice/fb-user/datastore/client')
+const FBUserDataStoreClient = require('@ministryofjustice/fb-client/user/datastore/client')
 
 // initialise client
 const userDataStoreClient = new FBUserDataStoreClient(serviceSecret, serviceToken, serviceSlug, userDataStoreUrl)
@@ -146,7 +150,7 @@ Client for requests to filestore endpoints.
 
 ``` javascript
 // load client
-const FBUserFileStoreClient = require('@ministryofjustice/fb-user/filestore/client')
+const FBUserFileStoreClient = require('@ministryofjustice/fb-client/user/filestore/client')
 
 // initialise client
 const userFileStoreClient = new FBUserFileStoreClient(serviceSecret, serviceToken, serviceSlug, userFileStoreUrl)

@@ -20,7 +20,7 @@ chai.use(sinonChai)
 const encryptStub = sinon.stub()
 const decryptStub = sinon.stub()
 
-const Client = proxyquire('~/fb-user/jwt/client', {
+const Client = proxyquire('~/fb-client/user/jwt/client', {
   './aes256': {
     encrypt: encryptStub,
     decrypt: decryptStub
@@ -40,7 +40,7 @@ const encodedPublicKey = 'LS0tLS1CRUdJTiBQVUJMSUMgS0VZLS0tLS0KTUlJQklqQU5CZ2txaG
 
 const publicKey = Buffer.from(encodedPublicKey, 'base64').toString('ascii')
 
-describe('~/fb-user/jwt/client', () => {
+describe('~/fb-client/user/jwt/client', () => {
   describe('Always', () => {
     it('exports the class', () => expect(Client).to.be.a('function'))
 
