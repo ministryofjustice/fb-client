@@ -32,7 +32,7 @@ jobs:
             set -e
 
             VERSION=$(node -p "require('./package.json').version")
-            PUBLISHED_VERSION=$(npm view @ministryofjustice/fb-components version);
+            PUBLISHED_VERSION=$(npm view @ministryofjustice/fb-client version);
 
             if [ "$VERSION" != "$PUBLISHED_VERSION" ]
             then
