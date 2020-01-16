@@ -29,10 +29,9 @@ describe('~/fb-client/user/datastore/client', () => {
       })
 
       it('assigns the service secret to a field of the instance', () => expect(client.serviceSecret).to.equal(serviceSecret))
-
       it('assigns the service token to a field of the instance', () => expect(client.serviceToken).to.equal(serviceToken))
-
       it('assigns the service slug to a field of the instance', () => expect(client.serviceSlug).to.equal(serviceSlug))
+      it('has no encodedPrivateKey set', () => expect(client.encodedPrivateKey).to.equal(undefined))
 
       it('assigns a default metrics object to the field `apiMetrics`', () => {
         expect(client.apiMetrics).to.be.an('object')
@@ -140,6 +139,13 @@ describe('~/fb-client/user/datastore/client', () => {
             expect(code).to.equal('ENOMICROSERVICEURL')
           }
         })
+      })
+    })
+
+    describe('With encodedPrivateKey', () => {
+      it('sets encodedPrivateKey', () => {
+        const client = new UserDataStoreClient(serviceSecret, serviceToken, serviceSlug, userDataStoreUrl, 'some-encoded-private-key')
+        expect(client.encodedPrivateKey).to.equal('some-encoded-private-key')
       })
     })
   })
