@@ -215,9 +215,9 @@ describe('~/fb-client/submitter/client', () => {
         url: '/submission',
         payload: {
           encrypted_user_id_and_token: 'mock encrypted user id and token payload',
-          service_slug: 'testServiceSlug',
-          subject: 'mock user id'
-        }
+          service_slug: 'testServiceSlug'
+        },
+        subject: 'mock user id'
       }, mockLogger)
     })
 
