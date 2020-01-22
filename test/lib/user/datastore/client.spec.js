@@ -224,7 +224,17 @@ describe('~/fb-client/user/datastore/client', () => {
     })
 
     it('calls `sendPost`', () => {
-      expect(sendPostStub).to.be.calledWith({url: '/service/:serviceSlug/user/:userId', context: {serviceSlug, userId: 'mock user id'}, payload: {payload: 'mock encrypted payload'}}, mockLogger)
+      expect(sendPostStub).to.be.calledWith({
+        url: '/service/:serviceSlug/user/:userId',
+        context: {
+          serviceSlug,
+          userId: 'mock user id'
+        },
+        payload: {
+          payload: 'mock encrypted payload'
+        },
+        subject: 'mock user id'
+      }, mockLogger)
     })
 
     it('returns a `Promise` which resolves to undefined', () => {

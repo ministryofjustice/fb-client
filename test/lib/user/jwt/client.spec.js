@@ -321,15 +321,15 @@ describe('~/fb-client/user/jwt/client', () => {
             it('includes subject in jwt', () => {
               const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl, undefined, {encodedPrivateKey: encodedPrivateKey})
 
-              expect(client.createRequestOptions('/foo', {}, {foo: 'bar', subject: 'some-guid'}))
+              expect(client.createRequestOptions('/foo', {}, {foo: 'bar'}, false, {subject: 'some-guid'}))
                 .to.eql({
                   url: 'https://microservice/foo',
                   headers: {
-                    'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjRhZmRlY2ViM2M5Y2U4MWI2Y2YzZGJhYmY5YzhkZWQ2MmI0MDBhMDI0NzljZjA3ZmY1MjdlNGJkYTQxNTBjZWMiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyIsInN1YiI6InNvbWUtZ3VpZCJ9.umcTD6ZxVU-ngx20CTro9o8U9fhHfhYIo1qTCd6D5QY',
-                    'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjRhZmRlY2ViM2M5Y2U4MWI2Y2YzZGJhYmY5YzhkZWQ2MmI0MDBhMDI0NzljZjA3ZmY1MjdlNGJkYTQxNTBjZWMiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyIsInN1YiI6InNvbWUtZ3VpZCJ9.mEVd0chvkwX7JnOGprPDIKpua68zkc3f58JX1U6pA-Y8hIkSUcH-QEc-p0FgUDOVroMJqNh3qnOQ4KVVQyrLMadktceM4i_pVQA_eMsJTfO4EYou0OqCD_MfyuxQPQ-7t9uTLTJydTM-Sez3GNMBEjZz07pML611YWGIHRmPcuFcFWV-wm4LXt_b8oPfThbEqX14h7ugeDkAJThYlRH3SQwsY3_iELjyR09XCyBV-J8cnj6WqLr7cq5sQpVHl_dtToypKOc6EfUga0h15hB4c5o-UmWcMbuyWOBT9pZGuBCvWVlllmZSDlr_F4y2C9ilKv3rGtJvj4EhNkIIP51ArA'
+                    'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.Ir9FvrSHfSyqJp-KmHoCnj8Z6HbpszC3PhhmB0Dq2oI',
+                    'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyIsInN1YiI6InNvbWUtZ3VpZCJ9.AXc2a7wqsz1qJjzoPPIKFfXCNxQI3yz0CpdIkJ2Byj8vw_AnObHEvb6KEgpnEQaHhb-nQgEoVoNoA2DMiQaoEZco79Wv1oiz8IDNjDSX-84z6_Mh7-PvTc0NjLtUtW6mSS-yYMTGDrAL5BNK8vYOvtLxXjvNjcCHOcVfzPEiNpU7GvJsZhpA3f_mvcwpVqYTxa8t0qfgTBsFcpJFxOlEvRglzHLHmtjBIRGfVkcFjZXMVZ5oQiMftWzzSDG6MJLeJJ_4wzp6dwAc-bNw5Jg6sljNc5vEA7LsKc3ABiz7QK4FqTn7iY6C99z1ihRpoDiJ7YVfcvh4XcM97XKtxeHg8w'
                   },
                   responseType: 'json',
-                  json: {foo: 'bar', subject: 'some-guid'}
+                  json: {foo: 'bar'}
                 })
             })
           })
