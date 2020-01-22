@@ -181,7 +181,15 @@ describe('~/fb-client/user/datastore/client', () => {
     })
 
     it('calls `sendGet`', () => {
-      expect(sendGetStub).to.be.calledWith({url: '/service/:serviceSlug/user/:userId', context: {serviceSlug, userId: 'mock user id'}}, mockLogger)
+      expect(sendGetStub).to.be.calledWith({
+        url: '/service/:serviceSlug/user/:userId',
+        context: {
+          serviceSlug,
+          userId: 'mock user id'
+        },
+        subject: 'mock user id'
+      },
+      mockLogger)
     })
 
     it('calls `decrypt`', () => {
