@@ -21,7 +21,6 @@
     "path-to-regexp": "^6.1.0"
   },
   "devDependencies": {
-    "@ministryofjustice/eslint-config-fb": "^1.1.8",
     "@ministryofjustice/module-alias": "^1.0.9",
     "babel-eslint": "^10.0.3",
     "chai": "^4.2.0",
