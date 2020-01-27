@@ -29,10 +29,9 @@ describe('~/fb-client/user/datastore/client', () => {
       })
 
       it('assigns the service secret to a field of the instance', () => expect(client.serviceSecret).to.equal(serviceSecret))
-
       it('assigns the service token to a field of the instance', () => expect(client.serviceToken).to.equal(serviceToken))
-
       it('assigns the service slug to a field of the instance', () => expect(client.serviceSlug).to.equal(serviceSlug))
+      it('has no encodedPrivateKey set', () => expect(client.encodedPrivateKey).to.equal(undefined))
 
       it('assigns a default metrics object to the field `apiMetrics`', () => {
         expect(client.apiMetrics).to.be.an('object')
@@ -142,6 +141,13 @@ describe('~/fb-client/user/datastore/client', () => {
         })
       })
     })
+
+    describe('With encodedPrivateKey', () => {
+      it('sets encodedPrivateKey', () => {
+        const client = new UserDataStoreClient(serviceSecret, serviceToken, serviceSlug, userDataStoreUrl, 'some-encoded-private-key')
+        expect(client.encodedPrivateKey).to.equal('some-encoded-private-key')
+      })
+    })
   })
 
   describe('`getData()`', () => {
@@ -175,7 +181,15 @@ describe('~/fb-client/user/datastore/client', () => {
     })
 
     it('calls `sendGet`', () => {
-      expect(sendGetStub).to.be.calledWith({url: '/service/:serviceSlug/user/:userId', context: {serviceSlug, userId: 'mock user id'}}, mockLogger)
+      expect(sendGetStub).to.be.calledWith({
+        url: '/service/:serviceSlug/user/:userId',
+        context: {
+          serviceSlug,
+          userId: 'mock user id'
+        },
+        subject: 'mock user id'
+      },
+      mockLogger)
     })
 
     it('calls `decrypt`', () => {
@@ -218,7 +232,17 @@ describe('~/fb-client/user/datastore/client', () => {
     })
 
     it('calls `sendPost`', () => {
-      expect(sendPostStub).to.be.calledWith({url: '/service/:serviceSlug/user/:userId', context: {serviceSlug, userId: 'mock user id'}, payload: {payload: 'mock encrypted payload'}}, mockLogger)
+      expect(sendPostStub).to.be.calledWith({
+        url: '/service/:serviceSlug/user/:userId',
+        context: {
+          serviceSlug,
+          userId: 'mock user id'
+        },
+        payload: {
+          payload: 'mock encrypted payload'
+        },
+        subject: 'mock user id'
+      }, mockLogger)
     })
 
     it('returns a `Promise` which resolves to undefined', () => {

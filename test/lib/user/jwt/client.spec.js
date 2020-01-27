@@ -316,6 +316,23 @@ describe('~/fb-client/user/jwt/client', () => {
                 json: {foo: 'bar'}
               })
           })
+
+          describe('With subject', () => {
+            it('includes subject in jwt', () => {
+              const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl, undefined, {encodedPrivateKey: encodedPrivateKey})
+
+              expect(client.createRequestOptions('/foo', {}, {foo: 'bar'}, false, {subject: 'some-guid'}))
+                .to.eql({
+                  url: 'https://microservice/foo',
+                  headers: {
+                    'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.Ir9FvrSHfSyqJp-KmHoCnj8Z6HbpszC3PhhmB0Dq2oI',
+                    'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyIsInN1YiI6InNvbWUtZ3VpZCJ9.AXc2a7wqsz1qJjzoPPIKFfXCNxQI3yz0CpdIkJ2Byj8vw_AnObHEvb6KEgpnEQaHhb-nQgEoVoNoA2DMiQaoEZco79Wv1oiz8IDNjDSX-84z6_Mh7-PvTc0NjLtUtW6mSS-yYMTGDrAL5BNK8vYOvtLxXjvNjcCHOcVfzPEiNpU7GvJsZhpA3f_mvcwpVqYTxa8t0qfgTBsFcpJFxOlEvRglzHLHmtjBIRGfVkcFjZXMVZ5oQiMftWzzSDG6MJLeJJ_4wzp6dwAc-bNw5Jg6sljNc5vEA7LsKc3ABiz7QK4FqTn7iY6C99z1ihRpoDiJ7YVfcvh4XcM97XKtxeHg8w'
+                  },
+                  responseType: 'json',
+                  json: {foo: 'bar'}
+                })
+            })
+          })
         })
       })
 

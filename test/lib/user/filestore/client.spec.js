@@ -214,7 +214,20 @@ describe('~/fb-client/user/filestore/client', () => {
     })
 
     it('calls `sendGet`', () => {
-      expect(sendGetStub).to.be.calledWith({url: '/service/:serviceSlug/user/:userId/:fingerprint', context: {serviceSlug, userId: 'mock user id', fingerprint: 'mock fingerprint'}, payload: {encrypted_user_id_and_token: {payload: 'mock payload'}}}, mockLogger)
+      expect(sendGetStub).to.be.calledWith({
+        url: '/service/:serviceSlug/user/:userId/:fingerprint',
+        context: {
+          serviceSlug,
+          userId: 'mock user id',
+          fingerprint: 'mock fingerprint'
+        },
+        payload: {
+          encrypted_user_id_and_token: {
+            payload: 'mock payload'
+          }
+        },
+        subject: 'mock user id'
+      }, mockLogger)
     })
 
     it('returns a string', () => {
@@ -268,7 +281,8 @@ describe('~/fb-client/user/filestore/client', () => {
               max_size: client.maxSize,
               expires: client.expires
             }
-          }
+          },
+          subject: 'mock user id'
         }, mockLogger)
       })
 
@@ -304,7 +318,8 @@ describe('~/fb-client/user/filestore/client', () => {
                 max_size: client.maxSize,
                 expires: client.expires
               }
-            }
+            },
+            subject: 'mock user id'
           }, mockLogger)
         }
       })

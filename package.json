@@ -1,6 +1,6 @@
 {
   "name": "@ministryofjustice/fb-client",
-  "version": "1.0.6",
+  "version": "1.0.9",
   "description": "Form Builder clients for Email, SMS, Submitter, User Data Store, User File Store, and JSON Web Token (for Node)",
   "main": "./lib/index.js",
   "scripts": {
