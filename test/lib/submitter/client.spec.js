@@ -62,7 +62,7 @@ describe('~/fb-client/submitter/client', () => {
         it('has the expected name', () => {
           try {
             new SubmitterClient()
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('SubmitterClientError')
           }
         })
@@ -70,7 +70,7 @@ describe('~/fb-client/submitter/client', () => {
         it('has the expected code', () => {
           try {
             new SubmitterClient()
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESECRET')
           }
         })
@@ -84,7 +84,7 @@ describe('~/fb-client/submitter/client', () => {
         it('has the expected name', () => {
           try {
             new SubmitterClient(serviceSecret)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('SubmitterClientError')
           }
         })
@@ -92,7 +92,7 @@ describe('~/fb-client/submitter/client', () => {
         it('has the expected code', () => {
           try {
             new SubmitterClient(serviceSecret)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICETOKEN')
           }
         })
@@ -106,7 +106,7 @@ describe('~/fb-client/submitter/client', () => {
         it('has the expected name', () => {
           try {
             new SubmitterClient(serviceSecret, serviceToken)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('SubmitterClientError')
           }
         })
@@ -114,7 +114,7 @@ describe('~/fb-client/submitter/client', () => {
         it('has the expected code', () => {
           try {
             new SubmitterClient(serviceSecret, serviceToken)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESLUG')
           }
         })
@@ -128,7 +128,7 @@ describe('~/fb-client/submitter/client', () => {
         it('has the expected name', () => {
           try {
             new SubmitterClient(serviceSecret, serviceToken, serviceSlug)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('SubmitterClientError')
           }
         })
@@ -136,7 +136,7 @@ describe('~/fb-client/submitter/client', () => {
         it('has the expected code', () => {
           try {
             new SubmitterClient(serviceSecret, serviceToken, serviceSlug)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOMICROSERVICEURL')
           }
         })
@@ -158,7 +158,7 @@ describe('~/fb-client/submitter/client', () => {
 
       sendGetStub = sinon.stub(client, 'sendGet')
 
-      mockSubmissionId = {userId: 'mock user id', userToken: 'mock user token'}
+      mockSubmissionId = { userId: 'mock user id', userToken: 'mock user token' }
       mockLogger = {}
 
       returnValue = await client.getStatus(mockSubmissionId, mockLogger)
@@ -169,7 +169,7 @@ describe('~/fb-client/submitter/client', () => {
     })
 
     it('calls `sendGet`', () => {
-      expect(sendGetStub).to.be.calledWith({url: '/submission/:submissionId', context: {submissionId: mockSubmissionId}}, mockLogger)
+      expect(sendGetStub).to.be.calledWith({ url: '/submission/:submissionId', context: { submissionId: mockSubmissionId } }, mockLogger)
     })
 
     it('returns a `Promise` which resolves to undefined', () => {
@@ -192,7 +192,7 @@ describe('~/fb-client/submitter/client', () => {
 
     beforeEach(async () => {
       client = new SubmitterClient(serviceSecret, serviceToken, serviceSlug, submitterUrl)
-      sendPostStub = sinon.stub(client, 'sendPost').returns({payload: 'mock payload'})
+      sendPostStub = sinon.stub(client, 'sendPost').returns({ payload: 'mock payload' })
       encryptUserIdAndTokenStub = sinon.stub(client, 'encryptUserIdAndToken').returns('mock encrypted user id and token payload')
 
       mockSubmission = {}

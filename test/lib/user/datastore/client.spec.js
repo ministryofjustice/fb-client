@@ -61,7 +61,7 @@ describe('~/fb-client/user/datastore/client', () => {
         it('has the expected name', () => {
           try {
             new UserDataStoreClient()
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('UserDataStoreClientError')
           }
         })
@@ -69,7 +69,7 @@ describe('~/fb-client/user/datastore/client', () => {
         it('has the expected code', () => {
           try {
             new UserDataStoreClient()
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESECRET')
           }
         })
@@ -83,7 +83,7 @@ describe('~/fb-client/user/datastore/client', () => {
         it('has the expected name', () => {
           try {
             new UserDataStoreClient(serviceSecret)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('UserDataStoreClientError')
           }
         })
@@ -91,7 +91,7 @@ describe('~/fb-client/user/datastore/client', () => {
         it('has the expected code', () => {
           try {
             new UserDataStoreClient(serviceSecret)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICETOKEN')
           }
         })
@@ -105,7 +105,7 @@ describe('~/fb-client/user/datastore/client', () => {
         it('has the expected name', () => {
           try {
             new UserDataStoreClient(serviceSecret, serviceToken)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('UserDataStoreClientError')
           }
         })
@@ -113,7 +113,7 @@ describe('~/fb-client/user/datastore/client', () => {
         it('has the expected code', () => {
           try {
             new UserDataStoreClient(serviceSecret, serviceToken)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESLUG')
           }
         })
@@ -127,7 +127,7 @@ describe('~/fb-client/user/datastore/client', () => {
         it('has the expected name', () => {
           try {
             new UserDataStoreClient(serviceSecret, serviceToken, serviceSlug)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('UserDataStoreClientError')
           }
         })
@@ -135,7 +135,7 @@ describe('~/fb-client/user/datastore/client', () => {
         it('has the expected code', () => {
           try {
             new UserDataStoreClient(serviceSecret, serviceToken, serviceSlug)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOMICROSERVICEURL')
           }
         })
@@ -166,10 +166,10 @@ describe('~/fb-client/user/datastore/client', () => {
 
       mockDecryptedData = {}
 
-      sendGetStub = sinon.stub(client, 'sendGet').returns({payload: 'mock payload'})
+      sendGetStub = sinon.stub(client, 'sendGet').returns({ payload: 'mock payload' })
       decryptStub = sinon.stub(client, 'decrypt').returns(mockDecryptedData)
 
-      mockArgs = {userId: 'mock user id', userToken: 'mock user token'}
+      mockArgs = { userId: 'mock user id', userToken: 'mock user token' }
       mockLogger = {}
 
       returnValue = await client.getData(mockArgs, mockLogger)
@@ -213,10 +213,10 @@ describe('~/fb-client/user/datastore/client', () => {
 
     beforeEach(async () => {
       client = new UserDataStoreClient(serviceSecret, serviceToken, serviceSlug, userDataStoreUrl)
-      sendPostStub = sinon.stub(client, 'sendPost').returns({payload: 'mock payload'})
+      sendPostStub = sinon.stub(client, 'sendPost').returns({ payload: 'mock payload' })
       encryptStub = sinon.stub(client, 'encrypt').returns('mock encrypted payload')
 
-      mockArgs = {userId: 'mock user id', userToken: 'mock user token', payload: 'mock payload'}
+      mockArgs = { userId: 'mock user id', userToken: 'mock user token', payload: 'mock payload' }
       mockLogger = {}
 
       returnValue = await client.setData(mockArgs, mockLogger)

@@ -90,7 +90,7 @@ describe('~/fb-client/user/jwt/client', () => {
           it('has the expected name', () => {
             try {
               new Client()
-            } catch ({name}) {
+            } catch ({ name }) {
               expect(name).to.equal('ClientError')
             }
           })
@@ -98,7 +98,7 @@ describe('~/fb-client/user/jwt/client', () => {
           it('has the expected code', () => {
             try {
               new Client()
-            } catch ({code}) {
+            } catch ({ code }) {
               expect(code).to.equal('ENOSERVICESECRET')
             }
           })
@@ -112,7 +112,7 @@ describe('~/fb-client/user/jwt/client', () => {
           it('has the expected name', () => {
             try {
               new Client(serviceSecret)
-            } catch ({name}) {
+            } catch ({ name }) {
               expect(name).to.equal('ClientError')
             }
           })
@@ -120,7 +120,7 @@ describe('~/fb-client/user/jwt/client', () => {
           it('has the expected code', () => {
             try {
               new Client(serviceSecret)
-            } catch ({code}) {
+            } catch ({ code }) {
               expect(code).to.equal('ENOSERVICETOKEN')
             }
           })
@@ -134,7 +134,7 @@ describe('~/fb-client/user/jwt/client', () => {
           it('has the expected name', () => {
             try {
               new Client(serviceSecret, serviceToken)
-            } catch ({name}) {
+            } catch ({ name }) {
               expect(name).to.equal('ClientError')
             }
           })
@@ -142,7 +142,7 @@ describe('~/fb-client/user/jwt/client', () => {
           it('has the expected code', () => {
             try {
               new Client(serviceSecret, serviceToken)
-            } catch ({code}) {
+            } catch ({ code }) {
               expect(code).to.equal('ENOSERVICESLUG')
             }
           })
@@ -156,7 +156,7 @@ describe('~/fb-client/user/jwt/client', () => {
           it('has the expected name', () => {
             try {
               new Client(serviceSecret, serviceToken, serviceSlug)
-            } catch ({name}) {
+            } catch ({ name }) {
               expect(name).to.equal('ClientError')
             }
           })
@@ -164,7 +164,7 @@ describe('~/fb-client/user/jwt/client', () => {
           it('has the expected code', () => {
             try {
               new Client(serviceSecret, serviceToken, serviceSlug)
-            } catch ({code}) {
+            } catch ({ code }) {
               expect(code).to.equal('ENOMICROSERVICEURL')
             }
           })
@@ -202,7 +202,7 @@ describe('~/fb-client/user/jwt/client', () => {
     it('creates the URLs', () => {
       const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
 
-      expect(client.createEndpointUrl('/service/:serviceSlug/user/:userId', {serviceSlug, userId})).to.equal('https://microservice/service/testServiceSlug/user/testUserId')
+      expect(client.createEndpointUrl('/service/:serviceSlug/user/:userId', { serviceSlug, userId })).to.equal('https://microservice/service/testServiceSlug/user/testUserId')
     })
   })
 
@@ -213,8 +213,8 @@ describe('~/fb-client/user/jwt/client', () => {
 
     beforeEach(() => {
       client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
-      clock = sinon.useFakeTimers({now: 1483228800000})
-      accessToken = client.generateAccessToken({data: 'testData'}, serviceToken, 'HS256')
+      clock = sinon.useFakeTimers({ now: 1483228800000 })
+      accessToken = client.generateAccessToken({ data: 'testData' }, serviceToken, 'HS256')
     })
 
     afterEach(() => {
@@ -248,8 +248,8 @@ describe('~/fb-client/user/jwt/client', () => {
 
     beforeEach(() => {
       client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl, undefined, options)
-      clock = sinon.useFakeTimers({now: 1483228800000})
-      accessToken = client.generateAccessToken({data: 'testData'}, client.privateKey(), 'RS256')
+      clock = sinon.useFakeTimers({ now: 1483228800000 })
+      accessToken = client.generateAccessToken({ data: 'testData' }, client.privateKey(), 'RS256')
     })
 
     afterEach(() => {
@@ -277,7 +277,7 @@ describe('~/fb-client/user/jwt/client', () => {
     let clock
 
     beforeEach(() => {
-      clock = sinon.useFakeTimers({now: 1483228800000})
+      clock = sinon.useFakeTimers({ now: 1483228800000 })
     })
 
     afterEach(() => {
@@ -289,7 +289,7 @@ describe('~/fb-client/user/jwt/client', () => {
         it('returns an object with a JSON object assigned to the field `body`', () => {
           const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
 
-          expect(client.createRequestOptions('/foo', {}, {foo: 'bar'}))
+          expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }))
             .to.eql({
               url: 'https://microservice/foo',
               headers: {
@@ -297,15 +297,15 @@ describe('~/fb-client/user/jwt/client', () => {
                 'x-access-token-v2': undefined
               },
               responseType: 'json',
-              json: {foo: 'bar'}
+              json: { foo: 'bar' }
             })
         })
 
         describe('With private key available', () => {
           it('defines x-access-token-v2', () => {
-            const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl, undefined, {encodedPrivateKey: encodedPrivateKey})
+            const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl, undefined, { encodedPrivateKey: encodedPrivateKey })
 
-            expect(client.createRequestOptions('/foo', {}, {foo: 'bar'}))
+            expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }))
               .to.eql({
                 url: 'https://microservice/foo',
                 headers: {
@@ -313,15 +313,15 @@ describe('~/fb-client/user/jwt/client', () => {
                   'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.0w4kIowhP50x84G_4g1PU9ErpcJ1BBY4rUo5sOcyV3wjLviDKhwtPEZEmYgCGM28D00Xt8cWw9ImKDLhCL0CTWu_S1nodyQc1updMdgopWmgDLIfOJrImorx3GbO16o0sVSh3y8K-4ldj4TcUZ_b2RrJx1FZN5wBZ_alKDEihX-mKNpYZ4mpQH8bWVvX-86_JB_MnaCo2ZHyG3SNMQaTHUAQmhsH04K1ECG8_03wIXUWwfhbmqNyaiMlS0PKUubHFD8-6HoC4CQGO7ongmhXbOY_Jxsrkxgmcx9VhAtbAaBmGRJHkO8a5gL0gM2QuhuigIiinxpIOgvLSnCKoaStHA'
                 },
                 responseType: 'json',
-                json: {foo: 'bar'}
+                json: { foo: 'bar' }
               })
           })
 
           describe('With subject', () => {
             it('includes subject in jwt', () => {
-              const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl, undefined, {encodedPrivateKey: encodedPrivateKey})
+              const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl, undefined, { encodedPrivateKey: encodedPrivateKey })
 
-              expect(client.createRequestOptions('/foo', {}, {foo: 'bar'}, false, {subject: 'some-guid'}))
+              expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }, false, { subject: 'some-guid' }))
                 .to.eql({
                   url: 'https://microservice/foo',
                   headers: {
@@ -329,7 +329,7 @@ describe('~/fb-client/user/jwt/client', () => {
                     'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyIsInN1YiI6InNvbWUtZ3VpZCJ9.AXc2a7wqsz1qJjzoPPIKFfXCNxQI3yz0CpdIkJ2Byj8vw_AnObHEvb6KEgpnEQaHhb-nQgEoVoNoA2DMiQaoEZco79Wv1oiz8IDNjDSX-84z6_Mh7-PvTc0NjLtUtW6mSS-yYMTGDrAL5BNK8vYOvtLxXjvNjcCHOcVfzPEiNpU7GvJsZhpA3f_mvcwpVqYTxa8t0qfgTBsFcpJFxOlEvRglzHLHmtjBIRGfVkcFjZXMVZ5oQiMftWzzSDG6MJLeJJ_4wzp6dwAc-bNw5Jg6sljNc5vEA7LsKc3ABiz7QK4FqTn7iY6C99z1ihRpoDiJ7YVfcvh4XcM97XKtxeHg8w'
                   },
                   responseType: 'json',
-                  json: {foo: 'bar'}
+                  json: { foo: 'bar' }
                 })
             })
           })
@@ -359,7 +359,7 @@ describe('~/fb-client/user/jwt/client', () => {
         it('returns an object with a `searchParams` field', () => {
           const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
 
-          expect(client.createRequestOptions('/foo', {}, {foo: 'bar'}, true))
+          expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }, true))
             .to.eql({
               url: 'https://microservice/foo',
               headers: {
@@ -367,7 +367,7 @@ describe('~/fb-client/user/jwt/client', () => {
                 'x-access-token-v2': undefined
               },
               responseType: 'json',
-              searchParams: {payload: 'eyJmb28iOiJiYXIifQ=='}
+              searchParams: { payload: 'eyJmb28iOiJiYXIifQ==' }
             })
         })
       })
@@ -402,12 +402,12 @@ describe('~/fb-client/user/jwt/client', () => {
       beforeEach(async () => {
         client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
         generateAccessTokenStub = sinon.stub(client, 'generateAccessToken').returns('testAccessToken')
-        getGetStub = sinon.stub(got, 'get').callsFake((options) => Promise.resolve({body: {foo: 'bar'}}))
+        getGetStub = sinon.stub(got, 'get').callsFake((options) => Promise.resolve({ body: { foo: 'bar' } }))
 
         returnValue = await client.sendGet({
           url: '/user/:userId',
-          context: {userId},
-          payload: {foo: 'bar'}
+          context: { userId },
+          payload: { foo: 'bar' }
         })
       })
 
@@ -418,7 +418,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
       it('calls the correct url', () => expect(getGetStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
       it('adds the correct x-access-token header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token']).to.equal('testAccessToken'))
-      it('returns the unencrypted data', () => expect(returnValue).to.eql({foo: 'bar'}))
+      it('returns the unencrypted data', () => expect(returnValue).to.eql({ foo: 'bar' }))
     })
 
     describe('Without a payload', () => {
@@ -429,7 +429,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
         returnValue = await client.sendGet({
           url: '/user/:userId',
-          context: {userId}
+          context: { userId }
         })
       })
 
@@ -456,12 +456,12 @@ describe('~/fb-client/user/jwt/client', () => {
       beforeEach(async () => {
         client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
         generateAccessTokenStub = sinon.stub(client, 'generateAccessToken').returns('accessToken')
-        getPostStub = sinon.stub(got, 'post').returns(Promise.resolve({body: {foo: 'bar'}}))
+        getPostStub = sinon.stub(got, 'post').returns(Promise.resolve({ body: { foo: 'bar' } }))
 
         returnValue = await client.sendPost({
           url: '/user/:userId',
-          context: {userId},
-          payload: {foo: 'bar'}
+          context: { userId },
+          payload: { foo: 'bar' }
         })
       })
 
@@ -472,7 +472,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
       it('calls the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
       it('adds the x-access-token header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token']).to.equal('accessToken'))
-      it('returns an object', () => expect(returnValue).to.eql({foo: 'bar'}))
+      it('returns an object', () => expect(returnValue).to.eql({ foo: 'bar' }))
     })
 
     describe('Without a payload', () => {
@@ -490,7 +490,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
         returnValue = await client.sendPost({
           url: '/user/:userId',
-          context: {userId}
+          context: { userId }
         })
       })
 
@@ -525,7 +525,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
       nock(microserviceUrl)
         .post('/route')
-        .reply(200, {success: true})
+        .reply(200, { success: true })
 
       await client.send('post', {
         url: '/route'
@@ -544,7 +544,7 @@ describe('~/fb-client/user/jwt/client', () => {
       method: 'post'
     }))
 
-    it('stops the api metrics instrumentation timer with the correct args', () => expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 200, status_message: 'OK'}))
+    it('stops the api metrics instrumentation timer with the correct args', () => expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({ status_code: 200, status_message: 'OK' }))
 
     it('starts the request instrumentation timer with the correct args', () => expect(requestMetricsStartTimerStub.getCall(0).args[0]).to.eql({
       client_name: 'Client',
@@ -553,7 +553,7 @@ describe('~/fb-client/user/jwt/client', () => {
       method: 'post'
     }))
 
-    it('stops the request instrumentation timer with the correct args', () => expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 200, status_message: 'OK'}))
+    it('stops the request instrumentation timer with the correct args', () => expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({ status_code: 200, status_message: 'OK' }))
   })
 
   describe('Posting to an endpoint unsuccessfully', () => {
@@ -576,7 +576,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
       nock(microserviceUrl)
         .post('/not-found')
-        .reply(404, {code: 404, name: 'ENOTFOUND'})
+        .reply(404, { code: 404, name: 'ENOTFOUND' })
     })
 
     afterEach(() => {
@@ -588,7 +588,7 @@ describe('~/fb-client/user/jwt/client', () => {
       try {
         await client.send('post', {
           url: '/not-found'
-        }, {error: () => {}})
+        }, { error: () => {} })
       } catch (e) {
         expect(e.name).to.equal('ClientError')
       }
@@ -598,7 +598,7 @@ describe('~/fb-client/user/jwt/client', () => {
       try {
         await client.send('post', {
           url: '/not-found'
-        }, {error: () => {}})
+        }, { error: () => {} })
       } catch (e) {
         expect(apiMetricsStartTimerStub.getCall(0).args[0]).to.eql({
           client_name: 'Client',
@@ -613,9 +613,9 @@ describe('~/fb-client/user/jwt/client', () => {
       try {
         await client.send('post', {
           url: '/not-found'
-        }, {error: () => {}})
+        }, { error: () => {} })
       } catch (e) {
-        expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({error_code: 404, error_message: 'Not Found'})
+        expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({ error_code: 404, error_message: 'Not Found' })
       }
     })
 
@@ -623,7 +623,7 @@ describe('~/fb-client/user/jwt/client', () => {
       try {
         await client.send('post', {
           url: '/not-found'
-        }, {error: () => {}})
+        }, { error: () => {} })
       } catch (e) {
         expect(requestMetricsStartTimerStub.getCall(0).args[0]).to.eql({
           client_name: 'Client',
@@ -638,9 +638,9 @@ describe('~/fb-client/user/jwt/client', () => {
       try {
         await client.send('post', {
           url: '/not-found'
-        }, {error: () => {}})
+        }, { error: () => {} })
       } catch (e) {
-        expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({status_code: 404, status_message: 'Not Found'})
+        expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({ status_code: 404, status_message: 'Not Found' })
       }
     })
   })
@@ -674,7 +674,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     it('throws an ‘ENOTFOUND’', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
+        await client.send('get', { url: '/server-error', sendOptions: { retry: 3 } }, { error (e) { return e } })
       } catch (e) {
         expect(e.name).to.equal('ClientError')
       }
@@ -682,7 +682,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     it('starts the api metrics instrumentation timer with the correct args', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
+        await client.send('get', { url: '/server-error', sendOptions: { retry: 3 } }, { error (e) { return e } })
       } catch (e) {
         expect(apiMetricsStartTimerStub.getCall(0).args[0]).to.eql({
           client_name: 'Client',
@@ -695,7 +695,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     it('stops the api metrics instrumentation timer with the correct args', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
+        await client.send('get', { url: '/server-error', sendOptions: { retry: 3 } }, { error (e) { return e } })
       } catch (e) {
         expect(apiMetricsEndStub.getCall(0).args[0]).to.eql({
           error_code: 502,
@@ -706,7 +706,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     it('starts the request instrumentation timer with the correct args', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
+        await client.send('get', { url: '/server-error', sendOptions: { retry: 3 } }, { error (e) { return e } })
       } catch (e) {
         expect(requestMetricsStartTimerStub.getCall(0).args[0]).to.eql({
           client_name: 'Client',
@@ -719,7 +719,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     it('stops the request instrumentation timer with the correct args', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
+        await client.send('get', { url: '/server-error', sendOptions: { retry: 3 } }, { error (e) { return e } })
       } catch (e) {
         expect(requestMetricsEndStub.getCall(0).args[0]).to.eql({
           error_code: 502,
@@ -730,7 +730,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     it('calls the api metrics start timer the expected number of times', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
+        await client.send('get', { url: '/server-error', sendOptions: { retry: 3 } }, { error (e) { return e } })
       } catch (e) {
         expect(apiMetricsStartTimerStub.callCount).to.equal(1)
       }
@@ -738,7 +738,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     it('calls api metrics end the expected number of times', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
+        await client.send('get', { url: '/server-error', sendOptions: { retry: 3 } }, { error (e) { return e } })
       } catch (e) {
         expect(apiMetricsEndStub.callCount).to.equal(1)
       }
@@ -746,7 +746,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     it('calls request metrics end the expected number of times', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
+        await client.send('get', { url: '/server-error', sendOptions: { retry: 3 } }, { error (e) { return e } })
       } catch (e) {
         expect(requestMetricsEndStub.callCount).to.equal(4)
       }
@@ -754,7 +754,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     it('calls the request metrics start timer the expected number of times', async () => {
       try {
-        await client.send('get', {url: '/server-error', sendOptions: {retry: 3}}, {error (e) { return e }})
+        await client.send('get', { url: '/server-error', sendOptions: { retry: 3 } }, { error (e) { return e } })
       } catch (e) {
         expect(requestMetricsStartTimerStub.callCount).to.equal(4)
       }
@@ -772,11 +772,11 @@ describe('~/fb-client/user/jwt/client', () => {
         it('returns an object', async () => {
           nock(microserviceUrl)
             .get('/json-body')
-            .reply(201, {success: true})
+            .reply(201, { success: true })
 
-          const response = await client.send('get', {url: '/json-body'})
+          const response = await client.send('get', { url: '/json-body' })
 
-          expect(response).to.eql({success: true})
+          expect(response).to.eql({ success: true })
         })
       })
 
@@ -784,11 +784,11 @@ describe('~/fb-client/user/jwt/client', () => {
         it('returns an object', async () => {
           nock(microserviceUrl)
             .post('/json-body')
-            .reply(201, {success: true})
+            .reply(201, { success: true })
 
-          const response = await client.send('post', {url: '/json-body'})
+          const response = await client.send('post', { url: '/json-body' })
 
-          expect(response).to.eql({success: true})
+          expect(response).to.eql({ success: true })
         })
       })
     })
@@ -805,7 +805,7 @@ describe('~/fb-client/user/jwt/client', () => {
             .get('/empty-json-body')
             .reply(201, {})
 
-          const response = await client.send('get', {url: '/empty-json-body'})
+          const response = await client.send('get', { url: '/empty-json-body' })
 
           expect(response).to.eql({})
         })
@@ -817,7 +817,7 @@ describe('~/fb-client/user/jwt/client', () => {
             .post('/empty-json-body')
             .reply(201, {})
 
-          const response = await client.send('post', {url: '/empty-json-body'})
+          const response = await client.send('post', { url: '/empty-json-body' })
 
           expect(response).to.eql({})
         })
@@ -840,7 +840,7 @@ describe('~/fb-client/user/jwt/client', () => {
                 .get('/non-empty-body')
                 .reply(201, ' lorem ipsum ')
 
-              await client.send('get', {url: '/non-empty-body'})
+              await client.send('get', { url: '/non-empty-body' })
             } catch (e) {
               expect(e.name).to.equal('ClientError')
             }
@@ -854,7 +854,7 @@ describe('~/fb-client/user/jwt/client', () => {
                 .post('/non-empty-body')
                 .reply(201, ' lorem ipsum ')
 
-              await client.send('post', {url: '/non-empty-body'})
+              await client.send('post', { url: '/non-empty-body' })
             } catch (e) {
               expect(e.name).to.equal('ClientError')
             }
@@ -870,7 +870,7 @@ describe('~/fb-client/user/jwt/client', () => {
                 .get('/spaces-body')
                 .reply(201, '    ')
 
-              await client.send('get', {url: '/spaces-body'})
+              await client.send('get', { url: '/spaces-body' })
             } catch (e) {
               expect(e.name).to.equal('ClientError')
             }
@@ -884,7 +884,7 @@ describe('~/fb-client/user/jwt/client', () => {
                 .post('/spaces-body')
                 .reply(201, '    ')
 
-              await client.send('post', {url: '/spaces-body'})
+              await client.send('post', { url: '/spaces-body' })
             } catch (e) {
               expect(e.name).to.equal('ClientError')
             }
@@ -905,7 +905,7 @@ describe('~/fb-client/user/jwt/client', () => {
             .get('/empty-string-body')
             .reply(201, '')
 
-          const response = await client.send('get', {url: '/empty-string-body'})
+          const response = await client.send('get', { url: '/empty-string-body' })
 
           expect(response).to.eql({})
         })
@@ -917,7 +917,7 @@ describe('~/fb-client/user/jwt/client', () => {
             .post('/empty-string-body')
             .reply(201, '')
 
-          const response = await client.send('post', {url: '/empty-string-body'})
+          const response = await client.send('post', { url: '/empty-string-body' })
 
           expect(response).to.eql({})
         })
@@ -940,7 +940,7 @@ describe('~/fb-client/user/jwt/client', () => {
           .get('/undefined-body')
           .reply(201)
 
-        const response = await client.send('get', {url: '/undefined-body'})
+        const response = await client.send('get', { url: '/undefined-body' })
 
         expect(response).to.eql({})
       })
@@ -952,7 +952,7 @@ describe('~/fb-client/user/jwt/client', () => {
           .post('/undefined-body')
           .reply(201)
 
-        const response = await client.send('post', {url: '/undefined-body'})
+        const response = await client.send('post', { url: '/undefined-body' })
 
         expect(response).to.eql({})
       })
@@ -1092,7 +1092,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     it('calls `encrypt()`', () => {
       expect(encryptStub)
-        .to.be.calledWith('mock service secret', {userId: 'mock user id', userToken: 'mock user token'}, 'mock user idmock user token')
+        .to.be.calledWith('mock service secret', { userId: 'mock user id', userToken: 'mock user token' }, 'mock user idmock user token')
     })
 
     it('returns a string', () => {
@@ -1153,8 +1153,8 @@ describe('~/fb-client/user/jwt/client', () => {
             code: 400
           }
 
-          const labels = {client_name: 'Client', method: 'get', base_url: 'https://microservice', url: '/url'}
-          const logger = {error: errorStub}
+          const labels = { client_name: 'Client', method: 'get', base_url: 'https://microservice', url: '/url' }
+          const logger = { error: errorStub }
 
           client.logError(type, error, labels, logger)
         })
@@ -1182,8 +1182,8 @@ describe('~/fb-client/user/jwt/client', () => {
           const type = 'API'
           error = new Error()
 
-          const labels = {client_name: 'Client', method: 'get', base_url: 'https://microservice', url: '/url'}
-          const logger = {error: errorStub}
+          const labels = { client_name: 'Client', method: 'get', base_url: 'https://microservice', url: '/url' }
+          const logger = { error: errorStub }
 
           client.logError(type, error, labels, logger)
         })
@@ -1225,8 +1225,8 @@ describe('~/fb-client/user/jwt/client', () => {
             code: 400
           }
 
-          const labels = {client_name: 'Client', method: 'post', base_url: 'https://microservice', url: '/url'}
-          const logger = {error: errorStub}
+          const labels = { client_name: 'Client', method: 'post', base_url: 'https://microservice', url: '/url' }
+          const logger = { error: errorStub }
 
           client.logError(type, error, labels, logger)
         })
@@ -1254,8 +1254,8 @@ describe('~/fb-client/user/jwt/client', () => {
           const type = 'API'
           error = new Error()
 
-          const labels = {client_name: 'Client', method: 'post', base_url: 'https://microservice', url: '/url'}
-          const logger = {error: errorStub}
+          const labels = { client_name: 'Client', method: 'post', base_url: 'https://microservice', url: '/url' }
+          const logger = { error: errorStub }
 
           client.logError(type, error, labels, logger)
         })
@@ -1373,7 +1373,7 @@ describe('~/fb-client/user/jwt/client', () => {
       describe('The error has a `body` field', () => {
         it('Assigns the value to an `error` field', () => {
           const mockBody = {}
-          const mockError = {body: mockBody}
+          const mockError = { body: mockBody }
 
           client.handleRequestError(mockError)
 
@@ -1385,7 +1385,7 @@ describe('~/fb-client/user/jwt/client', () => {
         describe('400s', () => {
           describe('401', () => {
             it('throws a 401 request error', () => {
-              client.handleRequestError({statusCode: 401})
+              client.handleRequestError({ statusCode: 401 })
 
               expect(throwRequestErrorStub).to.be.calledWith(401)
             })
@@ -1393,7 +1393,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
           describe('403', () => {
             it('throws a 403 request error', () => {
-              client.handleRequestError({statusCode: 403})
+              client.handleRequestError({ statusCode: 403 })
 
               expect(throwRequestErrorStub).to.be.calledWith(403)
             })
@@ -1401,7 +1401,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
           describe('404', () => {
             it('throws a 404 request error', () => {
-              client.handleRequestError({statusCode: 404})
+              client.handleRequestError({ statusCode: 404 })
 
               expect(throwRequestErrorStub).to.be.calledWith(404)
             })
@@ -1412,7 +1412,7 @@ describe('~/fb-client/user/jwt/client', () => {
           describe('The error has an `error` field', () => {
             describe('The object on the error field has a `name` field', () => {
               it('throws a request error with the name', () => {
-                client.handleRequestError({statusCode: 500, error: {name: 'mock name'}})
+                client.handleRequestError({ statusCode: 500, error: { name: 'mock name' } })
 
                 expect(throwRequestErrorStub).to.be.calledWith(500, 'mock name')
               })
@@ -1420,7 +1420,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
             describe('The object on the error field does not have a `name` field but has a `code` field', () => {
               it('throws a request error with the code', () => {
-                client.handleRequestError({statusCode: 500, error: {code: 'mock code'}})
+                client.handleRequestError({ statusCode: 500, error: { code: 'mock code' } })
 
                 expect(throwRequestErrorStub).to.be.calledWith(500, 'mock code')
               })
@@ -1428,7 +1428,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
             describe('The object on the error field has neither a `name` field nor a `code` field', () => {
               it('throws a request error with the default code and the default type', () => {
-                client.handleRequestError({statusCode: 500, error: { }})
+                client.handleRequestError({ statusCode: 500, error: { } })
 
                 expect(throwRequestErrorStub).to.be.calledWith(500, 'EUNSPECIFIED')
               })
@@ -1438,7 +1438,7 @@ describe('~/fb-client/user/jwt/client', () => {
           describe('The error does not have an `error` field', () => {
             describe('The error has a `code` field', () => {
               it('throws a request error with the code', () => {
-                client.handleRequestError({statusCode: 500, code: 'mock code'})
+                client.handleRequestError({ statusCode: 500, code: 'mock code' })
 
                 expect(throwRequestErrorStub).to.be.calledWith(500, 'mock code')
               })
@@ -1446,7 +1446,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
             describe('The error does not have a `code` field', () => {
               it('throws a request error with the default code and the default type', () => {
-                client.handleRequestError({statusCode: 500, error: { }})
+                client.handleRequestError({ statusCode: 500, error: { } })
 
                 expect(throwRequestErrorStub).to.be.calledWith(500, 'EUNSPECIFIED')
               })
@@ -1461,7 +1461,7 @@ describe('~/fb-client/user/jwt/client', () => {
             describe('Mapping the name to a status code', () => {
               describe('The name is `ENOERROR`', () => {
                 it('throws a request error with the name', () => {
-                  client.handleRequestError({error: {name: 'ENOERROR'}})
+                  client.handleRequestError({ error: { name: 'ENOERROR' } })
 
                   expect(throwRequestErrorStub).to.be.calledWith(500, 'ENOERROR')
                 })
@@ -1469,7 +1469,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
               describe('The name is `ENOTFOUND`', () => {
                 it('throws a request error with the name', () => {
-                  client.handleRequestError({error: {name: 'ENOTFOUND'}})
+                  client.handleRequestError({ error: { name: 'ENOTFOUND' } })
 
                   expect(throwRequestErrorStub).to.be.calledWith(502, 'ENOTFOUND')
                 })
@@ -1477,7 +1477,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
               describe('The name is `ECONNREFUSED`', () => {
                 it('throws a request error with the name', () => {
-                  client.handleRequestError({error: {name: 'ECONNREFUSED'}})
+                  client.handleRequestError({ error: { name: 'ECONNREFUSED' } })
 
                   expect(throwRequestErrorStub).to.be.calledWith(503, 'ECONNREFUSED')
                 })
@@ -1489,7 +1489,7 @@ describe('~/fb-client/user/jwt/client', () => {
             describe('Mapping the code to a status code', () => {
               describe('The code is `ENOERROR`', () => {
                 it('throws a request error with the name', () => {
-                  client.handleRequestError({error: {code: 'ENOERROR'}})
+                  client.handleRequestError({ error: { code: 'ENOERROR' } })
 
                   expect(throwRequestErrorStub).to.be.calledWith(500, 'ENOERROR')
                 })
@@ -1497,7 +1497,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
               describe('The code is `ENOTFOUND`', () => {
                 it('throws a request error with the name', () => {
-                  client.handleRequestError({error: {code: 'ENOTFOUND'}})
+                  client.handleRequestError({ error: { code: 'ENOTFOUND' } })
 
                   expect(throwRequestErrorStub).to.be.calledWith(502, 'ENOTFOUND')
                 })
@@ -1505,7 +1505,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
               describe('The code is `ECONNREFUSED`', () => {
                 it('throws a request error with the name', () => {
-                  client.handleRequestError({error: {code: 'ECONNREFUSED'}})
+                  client.handleRequestError({ error: { code: 'ECONNREFUSED' } })
 
                   expect(throwRequestErrorStub).to.be.calledWith(503, 'ECONNREFUSED')
                 })
@@ -1515,7 +1515,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
           describe('The object on the error field has neither a `name` field nor a `code` field', () => {
             it('throws a request error with the default code and the default type', () => {
-              client.handleRequestError({error: { }})
+              client.handleRequestError({ error: { } })
 
               expect(throwRequestErrorStub).to.be.calledWith(500, 'EUNSPECIFIED')
             })
@@ -1527,7 +1527,7 @@ describe('~/fb-client/user/jwt/client', () => {
             describe('Mapping the code to a status code', () => {
               describe('The code is `ENOERROR`', () => {
                 it('throws a request error with the status code', () => {
-                  client.handleRequestError({code: 'ENOERROR'})
+                  client.handleRequestError({ code: 'ENOERROR' })
 
                   expect(throwRequestErrorStub).to.be.calledWith(500, 'ENOERROR')
                 })
@@ -1535,7 +1535,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
               describe('The code is `ENOTFOUND`', () => {
                 it('throws a request error with the status code', () => {
-                  client.handleRequestError({code: 'ENOTFOUND'})
+                  client.handleRequestError({ code: 'ENOTFOUND' })
 
                   expect(throwRequestErrorStub).to.be.calledWith(502, 'ENOTFOUND')
                 })
@@ -1543,7 +1543,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
               describe('The code is `ECONNREFUSED`', () => {
                 it('throws a request error with the status code', () => {
-                  client.handleRequestError({code: 'ECONNREFUSED'})
+                  client.handleRequestError({ code: 'ECONNREFUSED' })
 
                   expect(throwRequestErrorStub).to.be.calledWith(503, 'ECONNREFUSED')
                 })
@@ -1551,7 +1551,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
               describe('The code is not recognised', () => {
                 it('throws a request error with the default status code', () => {
-                  client.handleRequestError({code: 'ENOERROR'})
+                  client.handleRequestError({ code: 'ENOERROR' })
 
                   expect(throwRequestErrorStub).to.be.calledWith(500, 'ENOERROR')
                 })
@@ -1559,7 +1559,7 @@ describe('~/fb-client/user/jwt/client', () => {
             })
 
             it('throws a request error with the code', () => {
-              client.handleRequestError({code: 'mock code'})
+              client.handleRequestError({ code: 'mock code' })
 
               expect(throwRequestErrorStub).to.be.calledWith(500, 'mock code')
             })
@@ -1567,7 +1567,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
           describe('The error does not have a `code` field', () => {
             it('throws a request error with the default code and the default type', () => {
-              client.handleRequestError({error: { }})
+              client.handleRequestError({ error: { } })
 
               expect(throwRequestErrorStub).to.be.calledWith(500, 'EUNSPECIFIED')
             })
@@ -1590,7 +1590,7 @@ describe('~/fb-client/user/jwt/client', () => {
         it('has the expected name', () => {
           try {
             client.throwRequestError('mock code')
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name)
               .to.equal('ClientError')
           }
@@ -1599,7 +1599,7 @@ describe('~/fb-client/user/jwt/client', () => {
         it('has the expected code', () => {
           try {
             client.throwRequestError('mock code')
-          } catch ({code}) { // {error: }) {
+          } catch ({ code }) { // {error: }) {
             expect(code)
               .to.equal('mock code')
           }
@@ -1608,7 +1608,7 @@ describe('~/fb-client/user/jwt/client', () => {
         it('has the expected message', () => {
           try {
             client.throwRequestError('mock code')
-          } catch ({message}) { // {error: }) {
+          } catch ({ message }) { // {error: }) {
             expect(message)
               .to.equal('mock code')
           }
@@ -1623,7 +1623,7 @@ describe('~/fb-client/user/jwt/client', () => {
         it('has the expected name', () => {
           try {
             client.throwRequestError('mock code', 'mock message')
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name)
               .to.equal('ClientError')
           }
@@ -1632,7 +1632,7 @@ describe('~/fb-client/user/jwt/client', () => {
         it('has the expected code', () => {
           try {
             client.throwRequestError('mock code', 'mock message')
-          } catch ({code}) { // {error: }) {
+          } catch ({ code }) { // {error: }) {
             expect(code)
               .to.equal('mock code')
           }
@@ -1641,7 +1641,7 @@ describe('~/fb-client/user/jwt/client', () => {
         it('has the expected message', () => {
           try {
             client.throwRequestError('mock code', 'mock message')
-          } catch ({message}) { // {error: }) {
+          } catch ({ message }) { // {error: }) {
             expect(message)
               .to.equal('mock message')
           }

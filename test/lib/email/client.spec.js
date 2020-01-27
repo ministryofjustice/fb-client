@@ -62,7 +62,7 @@ describe('~/fb-client/email/client', () => {
         it('has the expected name', () => {
           try {
             new EmailClient()
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('EmailClientError')
           }
         })
@@ -70,7 +70,7 @@ describe('~/fb-client/email/client', () => {
         it('has the expected code', () => {
           try {
             new EmailClient()
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESECRET')
           }
         })
@@ -84,7 +84,7 @@ describe('~/fb-client/email/client', () => {
         it('has the expected name', () => {
           try {
             new EmailClient(serviceSecret)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('EmailClientError')
           }
         })
@@ -92,7 +92,7 @@ describe('~/fb-client/email/client', () => {
         it('has the expected code', () => {
           try {
             new EmailClient(serviceSecret)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICETOKEN')
           }
         })
@@ -106,7 +106,7 @@ describe('~/fb-client/email/client', () => {
         it('has the expected name', () => {
           try {
             new EmailClient(serviceSecret, serviceToken)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('EmailClientError')
           }
         })
@@ -114,7 +114,7 @@ describe('~/fb-client/email/client', () => {
         it('has the expected code', () => {
           try {
             new EmailClient(serviceSecret, serviceToken)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESLUG')
           }
         })
@@ -128,7 +128,7 @@ describe('~/fb-client/email/client', () => {
         it('has the expected name', () => {
           try {
             new EmailClient(serviceSecret, serviceToken, serviceSlug)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('EmailClientError')
           }
         })
@@ -136,7 +136,7 @@ describe('~/fb-client/email/client', () => {
         it('has the expected code', () => {
           try {
             new EmailClient(serviceSecret, serviceToken, serviceSlug)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOMICROSERVICEURL')
           }
         })
@@ -170,7 +170,7 @@ describe('~/fb-client/email/client', () => {
     })
 
     it('calls `sendPost`', () => {
-      expect(sendPostStub).to.be.calledWith({url: '/email', payload: {message: 'mock message', service_slug: serviceSlug}, sendOptions: mockSendOptions}, mockLogger)
+      expect(sendPostStub).to.be.calledWith({ url: '/email', payload: { message: 'mock message', service_slug: serviceSlug }, sendOptions: mockSendOptions }, mockLogger)
     })
 
     it('returns a `Promise` which resolves to undefined', () => {

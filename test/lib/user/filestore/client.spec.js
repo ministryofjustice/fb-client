@@ -74,7 +74,7 @@ describe('~/fb-client/user/filestore/client', () => {
         it('has the expected name', () => {
           try {
             new UserFileStoreClient()
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('UserFileStoreClientError')
           }
         })
@@ -82,7 +82,7 @@ describe('~/fb-client/user/filestore/client', () => {
         it('has the expected code', () => {
           try {
             new UserFileStoreClient()
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESECRET')
           }
         })
@@ -96,7 +96,7 @@ describe('~/fb-client/user/filestore/client', () => {
         it('has the expected name', () => {
           try {
             new UserFileStoreClient(serviceSecret)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('UserFileStoreClientError')
           }
         })
@@ -104,7 +104,7 @@ describe('~/fb-client/user/filestore/client', () => {
         it('has the expected code', () => {
           try {
             new UserFileStoreClient(serviceSecret)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICETOKEN')
           }
         })
@@ -118,7 +118,7 @@ describe('~/fb-client/user/filestore/client', () => {
         it('has the expected name', () => {
           try {
             new UserFileStoreClient(serviceSecret, serviceToken)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('UserFileStoreClientError')
           }
         })
@@ -126,7 +126,7 @@ describe('~/fb-client/user/filestore/client', () => {
         it('has the expected code', () => {
           try {
             new UserFileStoreClient(serviceSecret, serviceToken)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESLUG')
           }
         })
@@ -140,7 +140,7 @@ describe('~/fb-client/user/filestore/client', () => {
         it('has the expected name', () => {
           try {
             new UserFileStoreClient(serviceSecret, serviceToken, serviceSlug)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('UserFileStoreClientError')
           }
         })
@@ -148,7 +148,7 @@ describe('~/fb-client/user/filestore/client', () => {
         it('has the expected code', () => {
           try {
             new UserFileStoreClient(serviceSecret, serviceToken, serviceSlug)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOMICROSERVICEURL')
           }
         })
@@ -175,7 +175,7 @@ describe('~/fb-client/user/filestore/client', () => {
     })
 
     it('calls `createEndpointUrl`', () => {
-      expect(createEndpointUrlStub).to.be.calledWith('/service/:serviceSlug/user/:userId/:fingerprint', {serviceSlug, userId: 'mock user id', fingerprint: 'mock fingerprint'})
+      expect(createEndpointUrlStub).to.be.calledWith('/service/:serviceSlug/user/:userId/:fingerprint', { serviceSlug, userId: 'mock user id', fingerprint: 'mock fingerprint' })
     })
 
     it('returns a string', () => {
@@ -195,10 +195,10 @@ describe('~/fb-client/user/filestore/client', () => {
 
     beforeEach(async () => {
       client = new UserFileStoreClient(serviceSecret, serviceToken, serviceSlug, userFileStoreUrl)
-      encryptUserIdAndTokenStub = sinon.stub(client, 'encryptUserIdAndToken').returns({payload: 'mock payload'})
-      sendGetStub = sinon.stub(client, 'sendGet').returns({file: Buffer.from('mock file data')})
+      encryptUserIdAndTokenStub = sinon.stub(client, 'encryptUserIdAndToken').returns({ payload: 'mock payload' })
+      sendGetStub = sinon.stub(client, 'sendGet').returns({ file: Buffer.from('mock file data') })
 
-      mockArgs = {userId: 'mock user id', userToken: 'mock user token', fingerprint: 'mock fingerprint'}
+      mockArgs = { userId: 'mock user id', userToken: 'mock user token', fingerprint: 'mock fingerprint' }
       mockLogger = {}
 
       returnValue = await client.fetch(mockArgs, mockLogger)
@@ -245,10 +245,10 @@ describe('~/fb-client/user/filestore/client', () => {
 
     beforeEach(() => {
       client = new UserFileStoreClient(serviceSecret, serviceToken, serviceSlug, userFileStoreUrl)
-      encryptUserIdAndTokenStub = sinon.stub(client, 'encryptUserIdAndToken').returns({payload: 'mock payload'})
+      encryptUserIdAndTokenStub = sinon.stub(client, 'encryptUserIdAndToken').returns({ payload: 'mock payload' })
       sendPostStub = sinon.stub(client, 'sendPost')
 
-      mockArgs = {userId: 'mock user id', userToken: 'mock user token', file: 'mock file data', policy: {}}
+      mockArgs = { userId: 'mock user id', userToken: 'mock user token', file: 'mock file data', policy: {} }
       mockLogger = {}
     })
 
@@ -259,7 +259,7 @@ describe('~/fb-client/user/filestore/client', () => {
 
     describe('`sendPost` returns an object with a `fingerprint` field', () => {
       beforeEach(async () => {
-        sendPostStub.returns({fingerprint: 'mock fingerprint'})
+        sendPostStub.returns({ fingerprint: 'mock fingerprint' })
       })
 
       it('calls `encryptUserIdAndToken`', async () => {
@@ -273,9 +273,9 @@ describe('~/fb-client/user/filestore/client', () => {
 
         expect(sendPostStub).to.be.calledWith({
           url: '/service/:serviceSlug/user/:userId',
-          context: {serviceSlug, userId: 'mock user id'},
+          context: { serviceSlug, userId: 'mock user id' },
           payload: {
-            encrypted_user_id_and_token: {payload: 'mock payload'},
+            encrypted_user_id_and_token: { payload: 'mock payload' },
             file: 'bW9jayBmaWxlIGRhdGE=',
             policy: {
               max_size: client.maxSize,
@@ -310,9 +310,9 @@ describe('~/fb-client/user/filestore/client', () => {
         } catch (e) {
           expect(sendPostStub).to.be.calledWith({
             url: '/service/:serviceSlug/user/:userId',
-            context: {serviceSlug, userId: 'mock user id'},
+            context: { serviceSlug, userId: 'mock user id' },
             payload: {
-              encrypted_user_id_and_token: {payload: 'mock payload'},
+              encrypted_user_id_and_token: { payload: 'mock payload' },
               file: 'bW9jayBmaWxlIGRhdGE=',
               policy: {
                 max_size: client.maxSize,
@@ -369,7 +369,7 @@ describe('~/fb-client/user/filestore/client', () => {
     })
 
     it('calls `store`', () => {
-      expect(storeStub).to.be.calledWith({file: 'mock file data'}, mockLogger)
+      expect(storeStub).to.be.calledWith({ file: 'mock file data' }, mockLogger)
     })
 
     it('returns a `Promise` which resolves to undefined', () => {

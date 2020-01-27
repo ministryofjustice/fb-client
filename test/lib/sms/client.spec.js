@@ -62,7 +62,7 @@ describe('~/fb-client/sms/client', () => {
         it('has the expected name', () => {
           try {
             new SmsClient()
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('SmsClientError')
           }
         })
@@ -70,7 +70,7 @@ describe('~/fb-client/sms/client', () => {
         it('has the expected code', () => {
           try {
             new SmsClient()
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESECRET')
           }
         })
@@ -84,7 +84,7 @@ describe('~/fb-client/sms/client', () => {
         it('has the expected name', () => {
           try {
             new SmsClient(serviceSecret)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('SmsClientError')
           }
         })
@@ -92,7 +92,7 @@ describe('~/fb-client/sms/client', () => {
         it('has the expected code', () => {
           try {
             new SmsClient(serviceSecret)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICETOKEN')
           }
         })
@@ -106,7 +106,7 @@ describe('~/fb-client/sms/client', () => {
         it('has the expected name', () => {
           try {
             new SmsClient(serviceSecret, serviceToken)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('SmsClientError')
           }
         })
@@ -114,7 +114,7 @@ describe('~/fb-client/sms/client', () => {
         it('has the expected code', () => {
           try {
             new SmsClient(serviceSecret, serviceToken)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESLUG')
           }
         })
@@ -128,7 +128,7 @@ describe('~/fb-client/sms/client', () => {
         it('has the expected name', () => {
           try {
             new SmsClient(serviceSecret, serviceToken, serviceSlug)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('SmsClientError')
           }
         })
@@ -136,7 +136,7 @@ describe('~/fb-client/sms/client', () => {
         it('has the expected code', () => {
           try {
             new SmsClient(serviceSecret, serviceToken, serviceSlug)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOMICROSERVICEURL')
           }
         })
@@ -170,7 +170,7 @@ describe('~/fb-client/sms/client', () => {
     })
 
     it('calls `sendPost`', () => {
-      expect(sendPostStub).to.be.calledWith({url: '/sms', payload: {message: 'mock message', service_slug: serviceSlug}, sendOptions: mockSendOptions}, mockLogger)
+      expect(sendPostStub).to.be.calledWith({ url: '/sms', payload: { message: 'mock message', service_slug: serviceSlug }, sendOptions: mockSendOptions }, mockLogger)
     })
 
     it('returns a `Promise` which resolves to undefined', () => {
