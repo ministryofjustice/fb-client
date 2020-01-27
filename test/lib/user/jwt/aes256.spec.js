@@ -29,7 +29,7 @@ describe('~/fb-client/user/jwt/aes256', () => {
         it('has the expected name', () => {
           try {
             decrypt(undefined, encryptedData)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('AES256Error')
           }
         })
@@ -37,7 +37,7 @@ describe('~/fb-client/user/jwt/aes256', () => {
         it('has the expected code', () => {
           try {
             decrypt(undefined, encryptedData)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENODECRYPTKEY')
           }
         })
@@ -51,7 +51,7 @@ describe('~/fb-client/user/jwt/aes256', () => {
         it('has the expected name', () => {
           try {
             decrypt(userToken)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('AES256Error')
           }
         })
@@ -59,7 +59,7 @@ describe('~/fb-client/user/jwt/aes256', () => {
         it('has the expected code', () => {
           try {
             decrypt(userToken)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENODECRYPTVALUE')
           }
         })
@@ -96,7 +96,7 @@ describe('~/fb-client/user/jwt/aes256', () => {
         it('has the expected name', () => {
           try {
             encrypt(undefined, decryptedData)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('AES256Error')
           }
         })
@@ -104,7 +104,7 @@ describe('~/fb-client/user/jwt/aes256', () => {
         it('has the expected code', () => {
           try {
             encrypt(undefined, decryptedData)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOENCRYPTKEY')
           }
         })
@@ -118,7 +118,7 @@ describe('~/fb-client/user/jwt/aes256', () => {
         it('has the expected name', () => {
           try {
             encrypt(userToken)
-          } catch ({name}) {
+          } catch ({ name }) {
             expect(name).to.equal('AES256Error')
           }
         })
@@ -126,7 +126,7 @@ describe('~/fb-client/user/jwt/aes256', () => {
         it('has the expected code', () => {
           try {
             encrypt(userToken)
-          } catch ({code}) {
+          } catch ({ code }) {
             expect(code).to.equal('ENOENCRYPTVALUE')
           }
         })
