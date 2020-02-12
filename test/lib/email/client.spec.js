@@ -13,7 +13,6 @@ chai.use(sinonChai)
 const EmailClient = require('~/fb-client/email/client')
 
 const serviceSlug = 'testServiceSlug'
-const serviceToken = 'testServiceToken'
 const serviceSecret = 'testServiceSecret'
 const emailUrl = 'https://email'
 
@@ -25,12 +24,10 @@ describe('~/fb-client/email/client', () => {
       let client
 
       beforeEach(() => {
-        client = new EmailClient(serviceSecret, serviceToken, serviceSlug, emailUrl)
+        client = new EmailClient(serviceSecret, serviceSlug, emailUrl)
       })
 
       it('assigns the service secret to a field of the instance', () => expect(client.serviceSecret).to.equal(serviceSecret))
-
-      it('assigns the service token to a field of the instance', () => expect(client.serviceToken).to.equal(serviceToken))
 
       it('assigns the service slug to a field of the instance', () => expect(client.serviceSlug).to.equal(serviceSlug))
 
@@ -77,35 +74,13 @@ describe('~/fb-client/email/client', () => {
       })
     })
 
-    describe('Without a service token parameter', () => {
-      it('throws an error', () => expect(() => new EmailClient(serviceSecret)).to.throw(Error, 'No service token passed to client'))
-
-      describe('The error', () => {
-        it('has the expected name', () => {
-          try {
-            new EmailClient(serviceSecret)
-          } catch ({ name }) {
-            expect(name).to.equal('EmailClientError')
-          }
-        })
-
-        it('has the expected code', () => {
-          try {
-            new EmailClient(serviceSecret)
-          } catch ({ code }) {
-            expect(code).to.equal('ENOSERVICETOKEN')
-          }
-        })
-      })
-    })
-
     describe('Without a service slug parameter', () => {
-      it('throws an error', () => expect(() => new EmailClient(serviceSecret, serviceToken)).to.throw(Error, 'No service slug passed to client'))
+      it('throws an error', () => expect(() => new EmailClient(serviceSecret)).to.throw(Error, 'No service slug passed to client'))
 
       describe('The error', () => {
         it('has the expected name', () => {
           try {
-            new EmailClient(serviceSecret, serviceToken)
+            new EmailClient(serviceSecret)
           } catch ({ name }) {
             expect(name).to.equal('EmailClientError')
           }
@@ -113,7 +88,7 @@ describe('~/fb-client/email/client', () => {
 
         it('has the expected code', () => {
           try {
-            new EmailClient(serviceSecret, serviceToken)
+            new EmailClient(serviceSecret)
           } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESLUG')
           }
@@ -122,12 +97,12 @@ describe('~/fb-client/email/client', () => {
     })
 
     describe('Without an email url parameter', () => {
-      it('throws an error', () => expect(() => new EmailClient(serviceSecret, serviceToken, serviceSlug)).to.throw(Error, 'No microservice url passed to client'))
+      it('throws an error', () => expect(() => new EmailClient(serviceSecret, serviceSlug)).to.throw(Error, 'No microservice url passed to client'))
 
       describe('The error', () => {
         it('has the expected name', () => {
           try {
-            new EmailClient(serviceSecret, serviceToken, serviceSlug)
+            new EmailClient(serviceSecret, serviceSlug)
           } catch ({ name }) {
             expect(name).to.equal('EmailClientError')
           }
@@ -135,7 +110,7 @@ describe('~/fb-client/email/client', () => {
 
         it('has the expected code', () => {
           try {
-            new EmailClient(serviceSecret, serviceToken, serviceSlug)
+            new EmailClient(serviceSecret, serviceSlug)
           } catch ({ code }) {
             expect(code).to.equal('ENOMICROSERVICEURL')
           }
@@ -155,7 +130,7 @@ describe('~/fb-client/email/client', () => {
     let returnValue
 
     beforeEach(async () => {
-      client = new EmailClient(serviceSecret, serviceToken, serviceSlug, emailUrl)
+      client = new EmailClient(serviceSecret, serviceSlug, emailUrl)
       sendPostStub = sinon.stub(client, 'sendPost')
 
       mockMessage = 'mock message'

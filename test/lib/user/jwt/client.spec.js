@@ -30,7 +30,6 @@ const Client = proxyquire('~/fb-client/user/jwt/client', {
 const userId = 'testUserId'
 const serviceSlug = 'testServiceSlug'
 const serviceSecret = 'testServiceSecret'
-const serviceToken = 'testServiceToken'
 
 const microserviceUrl = 'https://microservice'
 
@@ -51,12 +50,10 @@ describe('~/fb-client/user/jwt/client', () => {
         let client
 
         beforeEach(() => {
-          client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl, MockCustomError)
+          client = new Client(serviceSecret, serviceSlug, microserviceUrl, MockCustomError)
         })
 
         it('assigns the service secret to a field of the instance', () => expect(client.serviceSecret).to.equal(serviceSecret))
-
-        it('assigns the service token to a field of the instance', () => expect(client.serviceToken).to.equal(serviceToken))
 
         it('assigns the service slug to a field of the instance', () => expect(client.serviceSlug).to.equal(serviceSlug))
 
@@ -105,35 +102,13 @@ describe('~/fb-client/user/jwt/client', () => {
         })
       })
 
-      describe('Without a service token parameter', () => {
-        it('throws an error', () => expect(() => new Client(serviceSecret)).to.throw(Error, 'No service token passed to client'))
-
-        describe('The error', () => {
-          it('has the expected name', () => {
-            try {
-              new Client(serviceSecret)
-            } catch ({ name }) {
-              expect(name).to.equal('ClientError')
-            }
-          })
-
-          it('has the expected code', () => {
-            try {
-              new Client(serviceSecret)
-            } catch ({ code }) {
-              expect(code).to.equal('ENOSERVICETOKEN')
-            }
-          })
-        })
-      })
-
       describe('Without a service slug parameter', () => {
-        it('throws an error', () => expect(() => new Client(serviceSecret, serviceToken)).to.throw(Error, 'No service slug passed to client'))
+        it('throws an error', () => expect(() => new Client(serviceSecret)).to.throw(Error, 'No service slug passed to client'))
 
         describe('The error', () => {
           it('has the expected name', () => {
             try {
-              new Client(serviceSecret, serviceToken)
+              new Client(serviceSecret)
             } catch ({ name }) {
               expect(name).to.equal('ClientError')
             }
@@ -141,7 +116,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
           it('has the expected code', () => {
             try {
-              new Client(serviceSecret, serviceToken)
+              new Client(serviceSecret)
             } catch ({ code }) {
               expect(code).to.equal('ENOSERVICESLUG')
             }
@@ -150,12 +125,12 @@ describe('~/fb-client/user/jwt/client', () => {
       })
 
       describe('Without a service url parameter', () => {
-        it('throws an error', () => expect(() => new Client(serviceSecret, serviceToken, serviceSlug)).to.throw(Error, 'No microservice url passed to client'))
+        it('throws an error', () => expect(() => new Client(serviceSecret, serviceSlug)).to.throw(Error, 'No microservice url passed to client'))
 
         describe('The error', () => {
           it('has the expected name', () => {
             try {
-              new Client(serviceSecret, serviceToken, serviceSlug)
+              new Client(serviceSecret, serviceSlug)
             } catch ({ name }) {
               expect(name).to.equal('ClientError')
             }
@@ -163,7 +138,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
           it('has the expected code', () => {
             try {
-              new Client(serviceSecret, serviceToken, serviceSlug)
+              new Client(serviceSecret, serviceSlug)
             } catch ({ code }) {
               expect(code).to.equal('ENOMICROSERVICEURL')
             }
@@ -174,7 +149,7 @@ describe('~/fb-client/user/jwt/client', () => {
       describe('With a custom error parameter', () => {
         class CustomError extends Error {}
 
-        it('throws an error', () => expect(() => new Client(null, null, null, null, CustomError)).to.throw(CustomError))
+        it('throws an error', () => expect(() => new Client(null, null, null, CustomError)).to.throw(CustomError))
       })
     })
   })
@@ -188,7 +163,7 @@ describe('~/fb-client/user/jwt/client', () => {
       mockApiMetrics = {}
       mockRequestMetrics = {}
 
-      client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      client = new Client(serviceSecret, serviceSlug, microserviceUrl)
 
       client.setMetricsInstrumentation(mockApiMetrics, mockRequestMetrics)
     })
@@ -200,41 +175,9 @@ describe('~/fb-client/user/jwt/client', () => {
 
   describe('Creating the endpoint URLs', () => {
     it('creates the URLs', () => {
-      const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      const client = new Client(serviceSecret, serviceSlug, microserviceUrl)
 
       expect(client.createEndpointUrl('/service/:serviceSlug/user/:userId', { serviceSlug, userId })).to.equal('https://microservice/service/testServiceSlug/user/testUserId')
-    })
-  })
-
-  describe('Generating a JSON web token', () => {
-    let client
-    let clock
-    let accessToken
-
-    beforeEach(() => {
-      client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
-      clock = sinon.useFakeTimers({ now: 1483228800000 })
-      accessToken = client.generateAccessToken({ data: 'testData' }, serviceToken, 'HS256')
-    })
-
-    afterEach(() => {
-      clock.restore()
-    })
-
-    it('generates a JSON web token containing a checksum', () => {
-      const {
-        checksum
-      } = jwt.verify(accessToken, serviceToken, 'RS256')
-
-      expect(checksum).to.equal('b5118e71a8ed3abbc8c40d4058b0dd54b9410ffd56ef888f602ed10026c46a3a')
-    })
-
-    it('generates a JSON web token containing an iat', () => {
-      const {
-        iat
-      } = jwt.verify(accessToken, serviceToken)
-
-      expect(iat).to.equal(1483228800)
     })
   })
 
@@ -247,7 +190,7 @@ describe('~/fb-client/user/jwt/client', () => {
     }
 
     beforeEach(() => {
-      client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl, undefined, options)
+      client = new Client(serviceSecret, serviceSlug, microserviceUrl, undefined, options)
       clock = sinon.useFakeTimers({ now: 1483228800000 })
       accessToken = client.generateAccessToken({ data: 'testData' }, client.privateKey(), 'RS256')
     })
@@ -287,15 +230,12 @@ describe('~/fb-client/user/jwt/client', () => {
     describe('POST requests', () => {
       describe('With data', () => {
         it('returns an object with a JSON object assigned to the field `body`', () => {
-          const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+          const client = new Client(serviceSecret, serviceSlug, microserviceUrl)
 
           expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }))
             .to.eql({
               url: 'https://microservice/foo',
-              headers: {
-                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.Ir9FvrSHfSyqJp-KmHoCnj8Z6HbpszC3PhhmB0Dq2oI',
-                'x-access-token-v2': undefined
-              },
+              headers: { 'x-access-token-v2': undefined },
               responseType: 'json',
               json: { foo: 'bar' }
             })
@@ -303,13 +243,12 @@ describe('~/fb-client/user/jwt/client', () => {
 
         describe('With private key available', () => {
           it('defines x-access-token-v2', () => {
-            const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl, undefined, { encodedPrivateKey: encodedPrivateKey })
+            const client = new Client(serviceSecret, serviceSlug, microserviceUrl, undefined, { encodedPrivateKey: encodedPrivateKey })
 
             expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }))
               .to.eql({
                 url: 'https://microservice/foo',
                 headers: {
-                  'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.Ir9FvrSHfSyqJp-KmHoCnj8Z6HbpszC3PhhmB0Dq2oI',
                   'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.0w4kIowhP50x84G_4g1PU9ErpcJ1BBY4rUo5sOcyV3wjLviDKhwtPEZEmYgCGM28D00Xt8cWw9ImKDLhCL0CTWu_S1nodyQc1updMdgopWmgDLIfOJrImorx3GbO16o0sVSh3y8K-4ldj4TcUZ_b2RrJx1FZN5wBZ_alKDEihX-mKNpYZ4mpQH8bWVvX-86_JB_MnaCo2ZHyG3SNMQaTHUAQmhsH04K1ECG8_03wIXUWwfhbmqNyaiMlS0PKUubHFD8-6HoC4CQGO7ongmhXbOY_Jxsrkxgmcx9VhAtbAaBmGRJHkO8a5gL0gM2QuhuigIiinxpIOgvLSnCKoaStHA'
                 },
                 responseType: 'json',
@@ -319,13 +258,12 @@ describe('~/fb-client/user/jwt/client', () => {
 
           describe('With subject', () => {
             it('includes subject in jwt', () => {
-              const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl, undefined, { encodedPrivateKey: encodedPrivateKey })
+              const client = new Client(serviceSecret, serviceSlug, microserviceUrl, undefined, { encodedPrivateKey: encodedPrivateKey })
 
               expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }, false, { subject: 'some-guid' }))
                 .to.eql({
                   url: 'https://microservice/foo',
                   headers: {
-                    'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.Ir9FvrSHfSyqJp-KmHoCnj8Z6HbpszC3PhhmB0Dq2oI',
                     'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyIsInN1YiI6InNvbWUtZ3VpZCJ9.AXc2a7wqsz1qJjzoPPIKFfXCNxQI3yz0CpdIkJ2Byj8vw_AnObHEvb6KEgpnEQaHhb-nQgEoVoNoA2DMiQaoEZco79Wv1oiz8IDNjDSX-84z6_Mh7-PvTc0NjLtUtW6mSS-yYMTGDrAL5BNK8vYOvtLxXjvNjcCHOcVfzPEiNpU7GvJsZhpA3f_mvcwpVqYTxa8t0qfgTBsFcpJFxOlEvRglzHLHmtjBIRGfVkcFjZXMVZ5oQiMftWzzSDG6MJLeJJ_4wzp6dwAc-bNw5Jg6sljNc5vEA7LsKc3ABiz7QK4FqTn7iY6C99z1ihRpoDiJ7YVfcvh4XcM97XKtxeHg8w'
                   },
                   responseType: 'json',
@@ -338,15 +276,12 @@ describe('~/fb-client/user/jwt/client', () => {
 
       describe('Without data', () => {
         it('returns an object without a JSON object assigned to the field `body`', () => {
-          const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+          const client = new Client(serviceSecret, serviceSlug, microserviceUrl)
 
           expect(client.createRequestOptions('/foo', {}, {}))
             .to.eql({
               url: 'https://microservice/foo',
-              headers: {
-                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjQ0MTM2ZmEzNTViMzY3OGExMTQ2YWQxNmY3ZTg2NDllOTRmYjRmYzIxZmU3N2U4MzEwYzA2MGY2MWNhYWZmOGEiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.45aiVFL2v7ZFSoazhffWHNhnRQiDgdVXyGBbn1Se9LA',
-                'x-access-token-v2': undefined
-              },
+              headers: { 'x-access-token-v2': undefined },
               responseType: 'json',
               json: {}
             })
@@ -357,15 +292,12 @@ describe('~/fb-client/user/jwt/client', () => {
     describe('GET requests', () => {
       describe('With data', () => {
         it('returns an object with a `searchParams` field', () => {
-          const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+          const client = new Client(serviceSecret, serviceSlug, microserviceUrl)
 
           expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }, true))
             .to.eql({
               url: 'https://microservice/foo',
-              headers: {
-                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.Ir9FvrSHfSyqJp-KmHoCnj8Z6HbpszC3PhhmB0Dq2oI',
-                'x-access-token-v2': undefined
-              },
+              headers: { 'x-access-token-v2': undefined },
               responseType: 'json',
               searchParams: { payload: 'eyJmb28iOiJiYXIifQ==' }
             })
@@ -374,15 +306,12 @@ describe('~/fb-client/user/jwt/client', () => {
 
       describe('Without data', () => {
         it('returns an object without a `searchParams` field', () => {
-          const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+          const client = new Client(serviceSecret, serviceSlug, microserviceUrl)
 
           expect(client.createRequestOptions('/foo', {}, {}, true))
             .to.eql({
               url: 'https://microservice/foo',
-              headers: {
-                'x-access-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjQ0MTM2ZmEzNTViMzY3OGExMTQ2YWQxNmY3ZTg2NDllOTRmYjRmYzIxZmU3N2U4MzEwYzA2MGY2MWNhYWZmOGEiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.45aiVFL2v7ZFSoazhffWHNhnRQiDgdVXyGBbn1Se9LA',
-                'x-access-token-v2': undefined
-              },
+              headers: { 'x-access-token-v2': undefined },
               responseType: 'json'
             })
         })
@@ -400,7 +329,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     describe('With a payload', () => {
       beforeEach(async () => {
-        client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl)
         generateAccessTokenStub = sinon.stub(client, 'generateAccessToken').returns('testAccessToken')
         getGetStub = sinon.stub(got, 'get').callsFake((options) => Promise.resolve({ body: { foo: 'bar' } }))
 
@@ -417,13 +346,13 @@ describe('~/fb-client/user/jwt/client', () => {
       })
 
       it('calls the correct url', () => expect(getGetStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('adds the correct x-access-token header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token']).to.equal('testAccessToken'))
+      it('adds the correct x-access-token-v2 header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token-v2']).to.equal('testAccessToken'))
       it('returns the unencrypted data', () => expect(returnValue).to.eql({ foo: 'bar' }))
     })
 
     describe('Without a payload', () => {
       beforeEach(async () => {
-        client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl)
         generateAccessTokenStub = sinon.stub(client, 'generateAccessToken').returns('testAccessToken')
         getGetStub = sinon.stub(got, 'get').returns(Promise.resolve({}))
 
@@ -439,7 +368,7 @@ describe('~/fb-client/user/jwt/client', () => {
       })
 
       it('calls the correct url', () => expect(getGetStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('adds the correct x-access-token header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token']).to.equal('testAccessToken'))
+      it('adds the correct x-access-token-v2 header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token-v2']).to.equal('testAccessToken'))
       it('returns an object', () => expect(returnValue).to.eql({}))
     })
   })
@@ -454,7 +383,7 @@ describe('~/fb-client/user/jwt/client', () => {
       let returnValue
 
       beforeEach(async () => {
-        client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl)
         generateAccessTokenStub = sinon.stub(client, 'generateAccessToken').returns('accessToken')
         getPostStub = sinon.stub(got, 'post').returns(Promise.resolve({ body: { foo: 'bar' } }))
 
@@ -471,7 +400,7 @@ describe('~/fb-client/user/jwt/client', () => {
       })
 
       it('calls the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('adds the x-access-token header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token']).to.equal('accessToken'))
+      it('adds the x-access-token-v2 header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token-v2']).to.equal('accessToken'))
       it('returns an object', () => expect(returnValue).to.eql({ foo: 'bar' }))
     })
 
@@ -484,7 +413,7 @@ describe('~/fb-client/user/jwt/client', () => {
       let returnValue
 
       beforeEach(async () => {
-        client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl)
         generateAccessTokenStub = sinon.stub(client, 'generateAccessToken').returns('accessToken')
         getPostStub = sinon.stub(got, 'post').returns(Promise.resolve({}))
 
@@ -500,7 +429,7 @@ describe('~/fb-client/user/jwt/client', () => {
       })
 
       it('calls the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('adds the x-access-token header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token']).to.equal('accessToken'))
+      it('adds the x-access-token-v2 header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token-v2']).to.equal('accessToken'))
       it('returns an object', () => expect(returnValue).to.eql({}))
     })
   })
@@ -515,7 +444,7 @@ describe('~/fb-client/user/jwt/client', () => {
     let requestMetricsStartTimerStub
 
     beforeEach(async () => {
-      client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      client = new Client(serviceSecret, serviceSlug, microserviceUrl)
 
       apiMetricsEndStub = sinon.stub()
       apiMetricsStartTimerStub = sinon.stub(client.apiMetrics, 'startTimer').returns(apiMetricsEndStub)
@@ -566,7 +495,7 @@ describe('~/fb-client/user/jwt/client', () => {
     let requestMetricsStartTimerStub
 
     beforeEach(async () => {
-      client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      client = new Client(serviceSecret, serviceSlug, microserviceUrl)
 
       apiMetricsEndStub = sinon.stub()
       apiMetricsStartTimerStub = sinon.stub(client.apiMetrics, 'startTimer').returns(apiMetricsEndStub)
@@ -658,7 +587,7 @@ describe('~/fb-client/user/jwt/client', () => {
       /*
        *  Don't use Nock or the nocked microservice URL
        */
-      client = new Client(serviceSecret, serviceToken, serviceSlug, 'https://retry-microservice')
+      client = new Client(serviceSecret, serviceSlug, 'https://retry-microservice')
 
       apiMetricsEndStub = sinon.stub()
       apiMetricsStartTimerStub = sinon.stub(client.apiMetrics, 'startTimer').returns(apiMetricsEndStub)
@@ -765,7 +694,7 @@ describe('~/fb-client/user/jwt/client', () => {
     describe('The JSON is populated', () => {
       let client
       beforeEach(() => {
-        client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl)
       })
 
       describe('Getting', async () => {
@@ -796,7 +725,7 @@ describe('~/fb-client/user/jwt/client', () => {
     describe('The JSON is not populated', () => {
       let client
       beforeEach(() => {
-        client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl)
       })
 
       describe('Getting', () => {
@@ -829,7 +758,7 @@ describe('~/fb-client/user/jwt/client', () => {
     describe('The string is populated', () => {
       let client
       beforeEach(() => {
-        client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl)
       })
 
       describe('With mixed characters', () => {
@@ -896,7 +825,7 @@ describe('~/fb-client/user/jwt/client', () => {
     describe('The string is not populated', () => {
       let client
       beforeEach(() => {
-        client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl)
       })
 
       describe('Getting', async () => {
@@ -928,7 +857,7 @@ describe('~/fb-client/user/jwt/client', () => {
   describe('An endpoint returns undefined', () => {
     let client
     beforeEach(() => {
-      client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      client = new Client(serviceSecret, serviceSlug, microserviceUrl)
     })
 
     /*
@@ -966,7 +895,7 @@ describe('~/fb-client/user/jwt/client', () => {
     let returnValue
 
     beforeEach(() => {
-      client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      client = new Client(serviceSecret, serviceSlug, microserviceUrl)
       mockData = {}
       encryptStub.returns('mock encrypted data')
       JSONStub = sinon.stub(JSON, 'stringify').returns('mock serialised data')
@@ -1002,7 +931,7 @@ describe('~/fb-client/user/jwt/client', () => {
       let returnValue
 
       beforeEach(() => {
-        client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl)
         decryptStub.returns('mock decrypted data')
         JSONStub = sinon.stub(JSON, 'parse').throws()
         throwRequestErrorStub = sinon.stub(client, 'throwRequestError')
@@ -1042,7 +971,7 @@ describe('~/fb-client/user/jwt/client', () => {
       let returnValue
 
       beforeEach(() => {
-        client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl)
         decryptStub.returns('mock decrypted data')
         JSONStub = sinon.stub(JSON, 'parse').returns('mock parsed data')
         throwRequestErrorStub = sinon.stub(client, 'throwRequestError')
@@ -1083,7 +1012,7 @@ describe('~/fb-client/user/jwt/client', () => {
     let returnValue
 
     beforeEach(() => {
-      client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      client = new Client(serviceSecret, serviceSlug, microserviceUrl)
       encryptStub = sinon.stub(client, 'encrypt').returns('mock encrypted data')
       client.serviceSecret = 'mock service secret'
 
@@ -1108,7 +1037,7 @@ describe('~/fb-client/user/jwt/client', () => {
     let returnValue
 
     beforeEach(() => {
-      client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      client = new Client(serviceSecret, serviceSlug, microserviceUrl)
       decryptStub = sinon.stub(client, 'decrypt').returns('mock decrypted data')
       client.serviceSecret = 'mock service secret'
 
@@ -1135,7 +1064,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     describe('GET', () => {
       beforeEach(() => {
-        client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl)
       })
 
       describe('With fields on the error instance', () => {
@@ -1207,7 +1136,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     describe('POST', () => {
       beforeEach(() => {
-        client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl)
       })
 
       describe('With fields on the error instance', () => {
@@ -1291,7 +1220,7 @@ describe('~/fb-client/user/jwt/client', () => {
     beforeEach(async () => {
       mockReturnValue = {}
 
-      client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      client = new Client(serviceSecret, serviceSlug, microserviceUrl)
       sendStub = sinon.stub(client, 'send').returns(mockReturnValue)
 
       mockArgs = {}
@@ -1319,7 +1248,7 @@ describe('~/fb-client/user/jwt/client', () => {
     let returnValue
 
     beforeEach(async () => {
-      client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      client = new Client(serviceSecret, serviceSlug, microserviceUrl)
       sendStub = sinon.stub(client, 'send').returns(undefined)
 
       mockArgs = {}
@@ -1346,7 +1275,7 @@ describe('~/fb-client/user/jwt/client', () => {
         it('throws the custom error', () => {
           class CustomError extends Error {}
 
-          const client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl, CustomError)
+          const client = new Client(serviceSecret, serviceSlug, microserviceUrl, CustomError)
 
           throwRequestErrorStub = sinon.stub(client, 'throwRequestError')
 
@@ -1357,7 +1286,7 @@ describe('~/fb-client/user/jwt/client', () => {
 
     describe('The client does not have a custom error', () => {
       beforeEach(() => {
-        client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl)
 
         throwRequestErrorStub = sinon.stub(client, 'throwRequestError')
       })
@@ -1580,7 +1509,7 @@ describe('~/fb-client/user/jwt/client', () => {
   describe('`throwRequestError()`', () => {
     let client
     beforeEach(() => {
-      client = new Client(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+      client = new Client(serviceSecret, serviceSlug, microserviceUrl)
     })
 
     describe('With a code', () => {

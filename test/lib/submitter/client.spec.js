@@ -13,7 +13,6 @@ chai.use(sinonChai)
 const SubmitterClient = require('~/fb-client/submitter/client')
 
 const serviceSlug = 'testServiceSlug'
-const serviceToken = 'testServiceToken'
 const serviceSecret = 'testServiceSecret'
 const submitterUrl = 'https://submitter'
 
@@ -25,12 +24,10 @@ describe('~/fb-client/submitter/client', () => {
       let client
 
       beforeEach(() => {
-        client = new SubmitterClient(serviceSecret, serviceToken, serviceSlug, submitterUrl)
+        client = new SubmitterClient(serviceSecret, serviceSlug, submitterUrl)
       })
 
       it('assigns the service secret to a field of the instance', () => expect(client.serviceSecret).to.equal(serviceSecret))
-
-      it('assigns the service token to a field of the instance', () => expect(client.serviceToken).to.equal(serviceToken))
 
       it('assigns the service slug to a field of the instance', () => expect(client.serviceSlug).to.equal(serviceSlug))
 
@@ -77,35 +74,13 @@ describe('~/fb-client/submitter/client', () => {
       })
     })
 
-    describe('Without a service token parameter', () => {
-      it('throws an error', () => expect(() => new SubmitterClient(serviceSecret)).to.throw(Error, 'No service token passed to client'))
-
-      describe('The error', () => {
-        it('has the expected name', () => {
-          try {
-            new SubmitterClient(serviceSecret)
-          } catch ({ name }) {
-            expect(name).to.equal('SubmitterClientError')
-          }
-        })
-
-        it('has the expected code', () => {
-          try {
-            new SubmitterClient(serviceSecret)
-          } catch ({ code }) {
-            expect(code).to.equal('ENOSERVICETOKEN')
-          }
-        })
-      })
-    })
-
     describe('Without a service slug parameter', () => {
-      it('throws an error', () => expect(() => new SubmitterClient(serviceSecret, serviceToken)).to.throw(Error, 'No service slug passed to client'))
+      it('throws an error', () => expect(() => new SubmitterClient(serviceSecret)).to.throw(Error, 'No service slug passed to client'))
 
       describe('The error', () => {
         it('has the expected name', () => {
           try {
-            new SubmitterClient(serviceSecret, serviceToken)
+            new SubmitterClient(serviceSecret)
           } catch ({ name }) {
             expect(name).to.equal('SubmitterClientError')
           }
@@ -113,7 +88,7 @@ describe('~/fb-client/submitter/client', () => {
 
         it('has the expected code', () => {
           try {
-            new SubmitterClient(serviceSecret, serviceToken)
+            new SubmitterClient(serviceSecret)
           } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESLUG')
           }
@@ -122,12 +97,12 @@ describe('~/fb-client/submitter/client', () => {
     })
 
     describe('Without a service url parameter', () => {
-      it('throws an error', () => expect(() => new SubmitterClient(serviceSecret, serviceToken, serviceSlug)).to.throw(Error, 'No microservice url passed to client'))
+      it('throws an error', () => expect(() => new SubmitterClient(serviceSecret, serviceSlug)).to.throw(Error, 'No microservice url passed to client'))
 
       describe('The error', () => {
         it('has the expected name', () => {
           try {
-            new SubmitterClient(serviceSecret, serviceToken, serviceSlug)
+            new SubmitterClient(serviceSecret, serviceSlug)
           } catch ({ name }) {
             expect(name).to.equal('SubmitterClientError')
           }
@@ -135,7 +110,7 @@ describe('~/fb-client/submitter/client', () => {
 
         it('has the expected code', () => {
           try {
-            new SubmitterClient(serviceSecret, serviceToken, serviceSlug)
+            new SubmitterClient(serviceSecret, serviceSlug)
           } catch ({ code }) {
             expect(code).to.equal('ENOMICROSERVICEURL')
           }
@@ -154,7 +129,7 @@ describe('~/fb-client/submitter/client', () => {
     let returnValue
 
     beforeEach(async () => {
-      client = new SubmitterClient(serviceSecret, serviceToken, serviceSlug, submitterUrl)
+      client = new SubmitterClient(serviceSecret, serviceSlug, submitterUrl)
 
       sendGetStub = sinon.stub(client, 'sendGet')
 
@@ -191,7 +166,7 @@ describe('~/fb-client/submitter/client', () => {
     let returnValue
 
     beforeEach(async () => {
-      client = new SubmitterClient(serviceSecret, serviceToken, serviceSlug, submitterUrl)
+      client = new SubmitterClient(serviceSecret, serviceSlug, submitterUrl)
       sendPostStub = sinon.stub(client, 'sendPost').returns({ payload: 'mock payload' })
       encryptUserIdAndTokenStub = sinon.stub(client, 'encryptUserIdAndToken').returns('mock encrypted user id and token payload')
 
