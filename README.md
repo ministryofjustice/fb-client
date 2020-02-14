@@ -13,7 +13,7 @@ Base client for requests to endpoints which require a JSON Web Token for authent
 const FBJWTClient = require('@ministryofjustice/fb-client/user/jwt/client')
 
 // create a client instance
-const jwtClient = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, microserviceUrl, [errorClass])
+const jwtClient = new FBJWTClient(serviceSecret, serviceSlug, microserviceUrl, [errorClass])
 ```
 
 #### `serviceSecret`
@@ -21,12 +21,6 @@ const jwtClient = new FBJWTClient(serviceSecret, serviceToken, serviceSlug, micr
 A `serviceSecret` is _required_.
 
 The constructor will throw an error if no `serviceSecret` is provided.
-
-#### `serviceToken`
-
-A `serviceToken` is _required_.
-
-The constructor will throw an error if no `serviceToken` is provided.
 
 #### `serviceSlug`
 
@@ -49,23 +43,23 @@ An `errorClass` is _optional_.
 ``` javascript
 // extend base class
 class FBMyClient extends FBJWTClient {
-  constructor (serviceSecret, serviceToken, serviceSlug, microserviceUrl, myVar) {
-    super(serviceSecret, serviceToken, serviceSlug, microserviceUrl)
+  constructor (serviceSecret, serviceSlug, microserviceUrl, myVar) {
+    super(serviceSecret, serviceSlug, microserviceUrl)
     // do something with additional constructor argument
     this.myVar = myVar
   }
 }
 
-const myClient = new FBMyClient('service_secret', 'service_token', 'myservice', 'http://myservice', 'my var')
+const myClient = new FBMyClient('service_secret', 'myservice', 'http://myservice', 'my var')
 ```
 
 ``` javascript
 // extend base class with custom error
 class FBAnotherClient extends FBJWTClient {
-  constructor (serviceSecret, serviceToken, serviceSlug, microserviceUrl) {
+  constructor (serviceSecret, serviceSlug, microserviceUrl) {
     // create custom error class
     class FBAnotherClientError extends FBJWTClient.prototype.ErrorClass {}
-    super(serviceSecret, serviceToken, serviceSlug, microserviceUrl, FBAnotherClientError)
+    super(serviceSecret, serviceSlug, microserviceUrl, FBAnotherClientError)
   }
 }
 ```
@@ -129,7 +123,7 @@ Client for requests to datastore endpoints.
 const FBUserDataStoreClient = require('@ministryofjustice/fb-client/user/datastore/client')
 
 // initialise client
-const userDataStoreClient = new FBUserDataStoreClient(serviceSecret, serviceToken, serviceSlug, userDataStoreUrl)
+const userDataStoreClient = new FBUserDataStoreClient(serviceSecret, serviceSlug, userDataStoreUrl)
 ```
 
 #### Fetching and storing
@@ -153,7 +147,7 @@ Client for requests to filestore endpoints.
 const FBUserFileStoreClient = require('@ministryofjustice/fb-client/user/filestore/client')
 
 // initialise client
-const userFileStoreClient = new FBUserFileStoreClient(serviceSecret, serviceToken, serviceSlug, userFileStoreUrl)
+const userFileStoreClient = new FBUserFileStoreClient(serviceSecret, serviceSlug, userFileStoreUrl)
 ```
 
 #### Fetching and storing
