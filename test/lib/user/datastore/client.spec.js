@@ -13,7 +13,6 @@ chai.use(sinonChai)
 const UserDataStoreClient = require('~/fb-client/user/datastore/client')
 
 const serviceSlug = 'testServiceSlug'
-const serviceToken = 'testServiceToken'
 const serviceSecret = 'testServiceSecret'
 const userDataStoreUrl = 'https://userdatastore'
 
@@ -25,11 +24,10 @@ describe('~/fb-client/user/datastore/client', () => {
       let client
 
       beforeEach(() => {
-        client = new UserDataStoreClient(serviceSecret, serviceToken, serviceSlug, userDataStoreUrl)
+        client = new UserDataStoreClient(serviceSecret, serviceSlug, userDataStoreUrl)
       })
 
       it('assigns the service secret to a field of the instance', () => expect(client.serviceSecret).to.equal(serviceSecret))
-      it('assigns the service token to a field of the instance', () => expect(client.serviceToken).to.equal(serviceToken))
       it('assigns the service slug to a field of the instance', () => expect(client.serviceSlug).to.equal(serviceSlug))
       it('has no encodedPrivateKey set', () => expect(client.encodedPrivateKey).to.equal(undefined))
 
@@ -76,35 +74,13 @@ describe('~/fb-client/user/datastore/client', () => {
       })
     })
 
-    describe('Without a service token parameter', () => {
-      it('throws an error', () => expect(() => new UserDataStoreClient(serviceSecret)).to.throw(Error, 'No service token passed to client'))
-
-      describe('The error', () => {
-        it('has the expected name', () => {
-          try {
-            new UserDataStoreClient(serviceSecret)
-          } catch ({ name }) {
-            expect(name).to.equal('UserDataStoreClientError')
-          }
-        })
-
-        it('has the expected code', () => {
-          try {
-            new UserDataStoreClient(serviceSecret)
-          } catch ({ code }) {
-            expect(code).to.equal('ENOSERVICETOKEN')
-          }
-        })
-      })
-    })
-
     describe('Without a service slug parameter', () => {
-      it('throws an error', () => expect(() => new UserDataStoreClient(serviceSecret, serviceToken)).to.throw(Error, 'No service slug passed to client'))
+      it('throws an error', () => expect(() => new UserDataStoreClient(serviceSecret)).to.throw(Error, 'No service slug passed to client'))
 
       describe('The error', () => {
         it('has the expected name', () => {
           try {
-            new UserDataStoreClient(serviceSecret, serviceToken)
+            new UserDataStoreClient(serviceSecret)
           } catch ({ name }) {
             expect(name).to.equal('UserDataStoreClientError')
           }
@@ -112,7 +88,7 @@ describe('~/fb-client/user/datastore/client', () => {
 
         it('has the expected code', () => {
           try {
-            new UserDataStoreClient(serviceSecret, serviceToken)
+            new UserDataStoreClient(serviceSecret)
           } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESLUG')
           }
@@ -121,12 +97,12 @@ describe('~/fb-client/user/datastore/client', () => {
     })
 
     describe('Without a service url parameter', () => {
-      it('throws an error', () => expect(() => new UserDataStoreClient(serviceSecret, serviceToken, serviceSlug)).to.throw(Error, 'No microservice url passed to client'))
+      it('throws an error', () => expect(() => new UserDataStoreClient(serviceSecret, serviceSlug)).to.throw(Error, 'No microservice url passed to client'))
 
       describe('The error', () => {
         it('has the expected name', () => {
           try {
-            new UserDataStoreClient(serviceSecret, serviceToken, serviceSlug)
+            new UserDataStoreClient(serviceSecret, serviceSlug)
           } catch ({ name }) {
             expect(name).to.equal('UserDataStoreClientError')
           }
@@ -134,7 +110,7 @@ describe('~/fb-client/user/datastore/client', () => {
 
         it('has the expected code', () => {
           try {
-            new UserDataStoreClient(serviceSecret, serviceToken, serviceSlug)
+            new UserDataStoreClient(serviceSecret, serviceSlug)
           } catch ({ code }) {
             expect(code).to.equal('ENOMICROSERVICEURL')
           }
@@ -144,7 +120,7 @@ describe('~/fb-client/user/datastore/client', () => {
 
     describe('With encodedPrivateKey', () => {
       it('sets encodedPrivateKey', () => {
-        const client = new UserDataStoreClient(serviceSecret, serviceToken, serviceSlug, userDataStoreUrl, 'some-encoded-private-key')
+        const client = new UserDataStoreClient(serviceSecret, serviceSlug, userDataStoreUrl, 'some-encoded-private-key')
         expect(client.encodedPrivateKey).to.equal('some-encoded-private-key')
       })
     })
@@ -162,7 +138,7 @@ describe('~/fb-client/user/datastore/client', () => {
     let returnValue
 
     beforeEach(async () => {
-      client = new UserDataStoreClient(serviceSecret, serviceToken, serviceSlug, userDataStoreUrl)
+      client = new UserDataStoreClient(serviceSecret, serviceSlug, userDataStoreUrl)
 
       mockDecryptedData = {}
 
@@ -212,7 +188,7 @@ describe('~/fb-client/user/datastore/client', () => {
     let returnValue
 
     beforeEach(async () => {
-      client = new UserDataStoreClient(serviceSecret, serviceToken, serviceSlug, userDataStoreUrl)
+      client = new UserDataStoreClient(serviceSecret, serviceSlug, userDataStoreUrl)
       sendPostStub = sinon.stub(client, 'sendPost').returns({ payload: 'mock payload' })
       encryptStub = sinon.stub(client, 'encrypt').returns('mock encrypted payload')
 

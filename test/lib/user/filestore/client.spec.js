@@ -25,7 +25,6 @@ const UserFileStoreClient = proxyquire('~/fb-client/user/filestore/client', {
 })
 
 const serviceSlug = 'testServiceSlug'
-const serviceToken = 'testServiceToken'
 const serviceSecret = 'testServiceSecret'
 const userFileStoreUrl = 'https://userfilestore'
 
@@ -37,12 +36,10 @@ describe('~/fb-client/user/filestore/client', () => {
       let client
 
       beforeEach(() => {
-        client = new UserFileStoreClient(serviceSecret, serviceToken, serviceSlug, userFileStoreUrl)
+        client = new UserFileStoreClient(serviceSecret, serviceSlug, userFileStoreUrl)
       })
 
       it('assigns the service secret to a field of the instance', () => expect(client.serviceSecret).to.equal(serviceSecret))
-
-      it('assigns the service token to a field of the instance', () => expect(client.serviceToken).to.equal(serviceToken))
 
       it('assigns the service slug to a field of the instance', () => expect(client.serviceSlug).to.equal(serviceSlug))
 
@@ -89,35 +86,13 @@ describe('~/fb-client/user/filestore/client', () => {
       })
     })
 
-    describe('Without a service token parameter', () => {
-      it('throws an error', () => expect(() => new UserFileStoreClient(serviceSecret)).to.throw(Error, 'No service token passed to client'))
-
-      describe('The error', () => {
-        it('has the expected name', () => {
-          try {
-            new UserFileStoreClient(serviceSecret)
-          } catch ({ name }) {
-            expect(name).to.equal('UserFileStoreClientError')
-          }
-        })
-
-        it('has the expected code', () => {
-          try {
-            new UserFileStoreClient(serviceSecret)
-          } catch ({ code }) {
-            expect(code).to.equal('ENOSERVICETOKEN')
-          }
-        })
-      })
-    })
-
     describe('Without a service slug parameter', () => {
-      it('throws an error', () => expect(() => new UserFileStoreClient(serviceSecret, serviceToken)).to.throw(Error, 'No service slug passed to client'))
+      it('throws an error', () => expect(() => new UserFileStoreClient(serviceSecret)).to.throw(Error, 'No service slug passed to client'))
 
       describe('The error', () => {
         it('has the expected name', () => {
           try {
-            new UserFileStoreClient(serviceSecret, serviceToken)
+            new UserFileStoreClient(serviceSecret)
           } catch ({ name }) {
             expect(name).to.equal('UserFileStoreClientError')
           }
@@ -125,7 +100,7 @@ describe('~/fb-client/user/filestore/client', () => {
 
         it('has the expected code', () => {
           try {
-            new UserFileStoreClient(serviceSecret, serviceToken)
+            new UserFileStoreClient(serviceSecret)
           } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESLUG')
           }
@@ -134,12 +109,12 @@ describe('~/fb-client/user/filestore/client', () => {
     })
 
     describe('Without a service url parameter', () => {
-      it('throws an error', () => expect(() => new UserFileStoreClient(serviceSecret, serviceToken, serviceSlug)).to.throw(Error, 'No microservice url passed to client'))
+      it('throws an error', () => expect(() => new UserFileStoreClient(serviceSecret, serviceSlug)).to.throw(Error, 'No microservice url passed to client'))
 
       describe('The error', () => {
         it('has the expected name', () => {
           try {
-            new UserFileStoreClient(serviceSecret, serviceToken, serviceSlug)
+            new UserFileStoreClient(serviceSecret, serviceSlug)
           } catch ({ name }) {
             expect(name).to.equal('UserFileStoreClientError')
           }
@@ -147,7 +122,7 @@ describe('~/fb-client/user/filestore/client', () => {
 
         it('has the expected code', () => {
           try {
-            new UserFileStoreClient(serviceSecret, serviceToken, serviceSlug)
+            new UserFileStoreClient(serviceSecret, serviceSlug)
           } catch ({ code }) {
             expect(code).to.equal('ENOMICROSERVICEURL')
           }
@@ -163,7 +138,7 @@ describe('~/fb-client/user/filestore/client', () => {
     let returnValue
 
     beforeEach(async () => {
-      client = new UserFileStoreClient(serviceSecret, serviceToken, serviceSlug, userFileStoreUrl)
+      client = new UserFileStoreClient(serviceSecret, serviceSlug, userFileStoreUrl)
 
       createEndpointUrlStub = sinon.stub(client, 'createEndpointUrl').returns('mock endpoint url')
 
@@ -194,7 +169,7 @@ describe('~/fb-client/user/filestore/client', () => {
     let returnValue
 
     beforeEach(async () => {
-      client = new UserFileStoreClient(serviceSecret, serviceToken, serviceSlug, userFileStoreUrl)
+      client = new UserFileStoreClient(serviceSecret, serviceSlug, userFileStoreUrl)
       encryptUserIdAndTokenStub = sinon.stub(client, 'encryptUserIdAndToken').returns({ payload: 'mock payload' })
       sendGetStub = sinon.stub(client, 'sendGet').returns({ file: Buffer.from('mock file data') })
 
@@ -244,7 +219,7 @@ describe('~/fb-client/user/filestore/client', () => {
     let mockLogger
 
     beforeEach(() => {
-      client = new UserFileStoreClient(serviceSecret, serviceToken, serviceSlug, userFileStoreUrl)
+      client = new UserFileStoreClient(serviceSecret, serviceSlug, userFileStoreUrl)
       encryptUserIdAndTokenStub = sinon.stub(client, 'encryptUserIdAndToken').returns({ payload: 'mock payload' })
       sendPostStub = sinon.stub(client, 'sendPost')
 
@@ -348,7 +323,7 @@ describe('~/fb-client/user/filestore/client', () => {
     let returnValue
 
     beforeEach(async () => {
-      client = new UserFileStoreClient(serviceSecret, serviceToken, serviceSlug, userFileStoreUrl)
+      client = new UserFileStoreClient(serviceSecret, serviceSlug, userFileStoreUrl)
       readFileStub.returns('mock file data')
       storeStub = sinon.stub(client, 'store')
 

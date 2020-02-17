@@ -13,7 +13,6 @@ chai.use(sinonChai)
 const SmsClient = require('~/fb-client/sms/client')
 
 const serviceSlug = 'testServiceSlug'
-const serviceToken = 'testServiceToken'
 const serviceSecret = 'testServiceSecret'
 const smsUrl = 'https://sms'
 
@@ -25,12 +24,10 @@ describe('~/fb-client/sms/client', () => {
       let client
 
       beforeEach(() => {
-        client = new SmsClient(serviceSecret, serviceToken, serviceSlug, smsUrl)
+        client = new SmsClient(serviceSecret, serviceSlug, smsUrl)
       })
 
       it('assigns the service secret to a field of the instance', () => expect(client.serviceSecret).to.equal(serviceSecret))
-
-      it('assigns the service token to a field of the instance', () => expect(client.serviceToken).to.equal(serviceToken))
 
       it('assigns the service slug to a field of the instance', () => expect(client.serviceSlug).to.equal(serviceSlug))
 
@@ -77,35 +74,13 @@ describe('~/fb-client/sms/client', () => {
       })
     })
 
-    describe('Without a service token parameter', () => {
-      it('throws an error', () => expect(() => new SmsClient(serviceSecret)).to.throw(Error, 'No service token passed to client'))
-
-      describe('The error', () => {
-        it('has the expected name', () => {
-          try {
-            new SmsClient(serviceSecret)
-          } catch ({ name }) {
-            expect(name).to.equal('SmsClientError')
-          }
-        })
-
-        it('has the expected code', () => {
-          try {
-            new SmsClient(serviceSecret)
-          } catch ({ code }) {
-            expect(code).to.equal('ENOSERVICETOKEN')
-          }
-        })
-      })
-    })
-
     describe('Without a service slug parameter', () => {
-      it('throws an error', () => expect(() => new SmsClient(serviceSecret, serviceToken)).to.throw(Error, 'No service slug passed to client'))
+      it('throws an error', () => expect(() => new SmsClient(serviceSecret)).to.throw(Error, 'No service slug passed to client'))
 
       describe('The error', () => {
         it('has the expected name', () => {
           try {
-            new SmsClient(serviceSecret, serviceToken)
+            new SmsClient(serviceSecret)
           } catch ({ name }) {
             expect(name).to.equal('SmsClientError')
           }
@@ -113,7 +88,7 @@ describe('~/fb-client/sms/client', () => {
 
         it('has the expected code', () => {
           try {
-            new SmsClient(serviceSecret, serviceToken)
+            new SmsClient(serviceSecret)
           } catch ({ code }) {
             expect(code).to.equal('ENOSERVICESLUG')
           }
@@ -122,12 +97,12 @@ describe('~/fb-client/sms/client', () => {
     })
 
     describe('Without an sms url parameter', () => {
-      it('throws an error', () => expect(() => new SmsClient(serviceSecret, serviceToken, serviceSlug)).to.throw(Error, 'No microservice url passed to client'))
+      it('throws an error', () => expect(() => new SmsClient(serviceSecret, serviceSlug)).to.throw(Error, 'No microservice url passed to client'))
 
       describe('The error', () => {
         it('has the expected name', () => {
           try {
-            new SmsClient(serviceSecret, serviceToken, serviceSlug)
+            new SmsClient(serviceSecret, serviceSlug)
           } catch ({ name }) {
             expect(name).to.equal('SmsClientError')
           }
@@ -135,7 +110,7 @@ describe('~/fb-client/sms/client', () => {
 
         it('has the expected code', () => {
           try {
-            new SmsClient(serviceSecret, serviceToken, serviceSlug)
+            new SmsClient(serviceSecret, serviceSlug)
           } catch ({ code }) {
             expect(code).to.equal('ENOMICROSERVICEURL')
           }
@@ -155,7 +130,7 @@ describe('~/fb-client/sms/client', () => {
     let returnValue
 
     beforeEach(async () => {
-      client = new SmsClient(serviceSecret, serviceToken, serviceSlug, smsUrl)
+      client = new SmsClient(serviceSecret, serviceSlug, smsUrl)
       sendPostStub = sinon.stub(client, 'sendPost')
 
       mockMessage = 'mock message'
