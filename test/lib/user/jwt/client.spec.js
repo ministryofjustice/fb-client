@@ -181,38 +181,69 @@ describe('~/fb-client/user/jwt/client', () => {
     })
   })
 
-  describe('Generating a JSON web token with encoded private key', () => {
+  describe('Generating a JSON web token with `encodedPrivateKey`', () => {
     let client
     let clock
     let accessToken
-    const options = {
-      encodedPrivateKey: encodedPrivateKey
-    }
 
-    beforeEach(() => {
-      client = new Client(serviceSecret, serviceSlug, microserviceUrl, undefined, options)
-      clock = sinon.useFakeTimers({ now: 1483228800000 })
-      accessToken = client.generateAccessToken({ data: 'testData' }, client.privateKey(), 'RS256')
+    describe('`encodedPrivateKey` is a string', () => {
+      beforeEach(() => {
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl, undefined, encodedPrivateKey)
+        clock = sinon.useFakeTimers({ now: 1483228800000 })
+        accessToken = client.generateAccessToken({ data: 'testData' }, client.privateKey(), 'RS256')
+      })
+
+      afterEach(() => {
+        clock.restore()
+      })
+
+      it('generates a JSON web token containing a checksum verifiable with public key', () => {
+        const {
+          checksum
+        } = jwt.verify(accessToken, publicKey)
+
+        expect(checksum).to.equal('b5118e71a8ed3abbc8c40d4058b0dd54b9410ffd56ef888f602ed10026c46a3a')
+      })
+
+      it('generates a JSON web token containing an iat', () => {
+        const {
+          iat
+        } = jwt.verify(accessToken, publicKey)
+
+        expect(iat).to.equal(1483228800)
+      })
     })
 
-    afterEach(() => {
-      clock.restore()
-    })
+    describe('`encodedPrivateKey` is a field of an object', () => {
+      const options = {
+        encodedPrivateKey: encodedPrivateKey
+      }
 
-    it('generates a JSON web token containing a checksum verifiable with public key', () => {
-      const {
-        checksum
-      } = jwt.verify(accessToken, publicKey)
+      beforeEach(() => {
+        client = new Client(serviceSecret, serviceSlug, microserviceUrl, undefined, options)
+        clock = sinon.useFakeTimers({ now: 1483228800000 })
+        accessToken = client.generateAccessToken({ data: 'testData' }, client.privateKey(), 'RS256')
+      })
 
-      expect(checksum).to.equal('b5118e71a8ed3abbc8c40d4058b0dd54b9410ffd56ef888f602ed10026c46a3a')
-    })
+      afterEach(() => {
+        clock.restore()
+      })
 
-    it('generates a JSON web token containing an iat', () => {
-      const {
-        iat
-      } = jwt.verify(accessToken, publicKey)
+      it('generates a JSON web token containing a checksum verifiable with public key', () => {
+        const {
+          checksum
+        } = jwt.verify(accessToken, publicKey)
 
-      expect(iat).to.equal(1483228800)
+        expect(checksum).to.equal('b5118e71a8ed3abbc8c40d4058b0dd54b9410ffd56ef888f602ed10026c46a3a')
+      })
+
+      it('generates a JSON web token containing an iat', () => {
+        const {
+          iat
+        } = jwt.verify(accessToken, publicKey)
+
+        expect(iat).to.equal(1483228800)
+      })
     })
   })
 
@@ -242,33 +273,67 @@ describe('~/fb-client/user/jwt/client', () => {
         })
 
         describe('With private key available', () => {
-          it('defines x-access-token-v2', () => {
-            const client = new Client(serviceSecret, serviceSlug, microserviceUrl, undefined, { encodedPrivateKey: encodedPrivateKey })
+          describe('The private key is a string', () => {
+            it('defines x-access-token-v2', () => {
+              const client = new Client(serviceSecret, serviceSlug, microserviceUrl, undefined, encodedPrivateKey)
 
-            expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }))
-              .to.eql({
-                url: 'https://microservice/foo',
-                headers: {
-                  'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.0w4kIowhP50x84G_4g1PU9ErpcJ1BBY4rUo5sOcyV3wjLviDKhwtPEZEmYgCGM28D00Xt8cWw9ImKDLhCL0CTWu_S1nodyQc1updMdgopWmgDLIfOJrImorx3GbO16o0sVSh3y8K-4ldj4TcUZ_b2RrJx1FZN5wBZ_alKDEihX-mKNpYZ4mpQH8bWVvX-86_JB_MnaCo2ZHyG3SNMQaTHUAQmhsH04K1ECG8_03wIXUWwfhbmqNyaiMlS0PKUubHFD8-6HoC4CQGO7ongmhXbOY_Jxsrkxgmcx9VhAtbAaBmGRJHkO8a5gL0gM2QuhuigIiinxpIOgvLSnCKoaStHA'
-                },
-                responseType: 'json',
-                json: { foo: 'bar' }
-              })
-          })
-
-          describe('With subject', () => {
-            it('includes subject in jwt', () => {
-              const client = new Client(serviceSecret, serviceSlug, microserviceUrl, undefined, { encodedPrivateKey: encodedPrivateKey })
-
-              expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }, false, { subject: 'some-guid' }))
+              expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }))
                 .to.eql({
                   url: 'https://microservice/foo',
                   headers: {
-                    'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyIsInN1YiI6InNvbWUtZ3VpZCJ9.AXc2a7wqsz1qJjzoPPIKFfXCNxQI3yz0CpdIkJ2Byj8vw_AnObHEvb6KEgpnEQaHhb-nQgEoVoNoA2DMiQaoEZco79Wv1oiz8IDNjDSX-84z6_Mh7-PvTc0NjLtUtW6mSS-yYMTGDrAL5BNK8vYOvtLxXjvNjcCHOcVfzPEiNpU7GvJsZhpA3f_mvcwpVqYTxa8t0qfgTBsFcpJFxOlEvRglzHLHmtjBIRGfVkcFjZXMVZ5oQiMftWzzSDG6MJLeJJ_4wzp6dwAc-bNw5Jg6sljNc5vEA7LsKc3ABiz7QK4FqTn7iY6C99z1ihRpoDiJ7YVfcvh4XcM97XKtxeHg8w'
+                    'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.0w4kIowhP50x84G_4g1PU9ErpcJ1BBY4rUo5sOcyV3wjLviDKhwtPEZEmYgCGM28D00Xt8cWw9ImKDLhCL0CTWu_S1nodyQc1updMdgopWmgDLIfOJrImorx3GbO16o0sVSh3y8K-4ldj4TcUZ_b2RrJx1FZN5wBZ_alKDEihX-mKNpYZ4mpQH8bWVvX-86_JB_MnaCo2ZHyG3SNMQaTHUAQmhsH04K1ECG8_03wIXUWwfhbmqNyaiMlS0PKUubHFD8-6HoC4CQGO7ongmhXbOY_Jxsrkxgmcx9VhAtbAaBmGRJHkO8a5gL0gM2QuhuigIiinxpIOgvLSnCKoaStHA'
                   },
                   responseType: 'json',
                   json: { foo: 'bar' }
                 })
+            })
+
+            describe('With subject', () => {
+              it('includes subject in jwt', () => {
+                const client = new Client(serviceSecret, serviceSlug, microserviceUrl, undefined, encodedPrivateKey)
+
+                expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }, false, { subject: 'some-guid' }))
+                  .to.eql({
+                    url: 'https://microservice/foo',
+                    headers: {
+                      'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyIsInN1YiI6InNvbWUtZ3VpZCJ9.AXc2a7wqsz1qJjzoPPIKFfXCNxQI3yz0CpdIkJ2Byj8vw_AnObHEvb6KEgpnEQaHhb-nQgEoVoNoA2DMiQaoEZco79Wv1oiz8IDNjDSX-84z6_Mh7-PvTc0NjLtUtW6mSS-yYMTGDrAL5BNK8vYOvtLxXjvNjcCHOcVfzPEiNpU7GvJsZhpA3f_mvcwpVqYTxa8t0qfgTBsFcpJFxOlEvRglzHLHmtjBIRGfVkcFjZXMVZ5oQiMftWzzSDG6MJLeJJ_4wzp6dwAc-bNw5Jg6sljNc5vEA7LsKc3ABiz7QK4FqTn7iY6C99z1ihRpoDiJ7YVfcvh4XcM97XKtxeHg8w'
+                    },
+                    responseType: 'json',
+                    json: { foo: 'bar' }
+                  })
+              })
+            })
+          })
+
+          describe('The private key is a field on an object', () => {
+            it('defines x-access-token-v2', () => {
+              const client = new Client(serviceSecret, serviceSlug, microserviceUrl, undefined, { encodedPrivateKey: encodedPrivateKey })
+
+              expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }))
+                .to.eql({
+                  url: 'https://microservice/foo',
+                  headers: {
+                    'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyJ9.0w4kIowhP50x84G_4g1PU9ErpcJ1BBY4rUo5sOcyV3wjLviDKhwtPEZEmYgCGM28D00Xt8cWw9ImKDLhCL0CTWu_S1nodyQc1updMdgopWmgDLIfOJrImorx3GbO16o0sVSh3y8K-4ldj4TcUZ_b2RrJx1FZN5wBZ_alKDEihX-mKNpYZ4mpQH8bWVvX-86_JB_MnaCo2ZHyG3SNMQaTHUAQmhsH04K1ECG8_03wIXUWwfhbmqNyaiMlS0PKUubHFD8-6HoC4CQGO7ongmhXbOY_Jxsrkxgmcx9VhAtbAaBmGRJHkO8a5gL0gM2QuhuigIiinxpIOgvLSnCKoaStHA'
+                  },
+                  responseType: 'json',
+                  json: { foo: 'bar' }
+                })
+            })
+
+            describe('With subject', () => {
+              it('includes subject in jwt', () => {
+                const client = new Client(serviceSecret, serviceSlug, microserviceUrl, undefined, { encodedPrivateKey: encodedPrivateKey })
+
+                expect(client.createRequestOptions('/foo', {}, { foo: 'bar' }, false, { subject: 'some-guid' }))
+                  .to.eql({
+                    url: 'https://microservice/foo',
+                    headers: {
+                      'x-access-token-v2': 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaGVja3N1bSI6IjdhMzhiZjgxZjM4M2Y2OTQzM2FkNmU5MDBkMzViM2UyMzg1NTkzZjc2YTdiN2FiNWQ0MzU1YjhiYTQxZWUyNGIiLCJpYXQiOjE0ODMyMjg4MDAsImlzcyI6InRlc3RTZXJ2aWNlU2x1ZyIsInN1YiI6InNvbWUtZ3VpZCJ9.AXc2a7wqsz1qJjzoPPIKFfXCNxQI3yz0CpdIkJ2Byj8vw_AnObHEvb6KEgpnEQaHhb-nQgEoVoNoA2DMiQaoEZco79Wv1oiz8IDNjDSX-84z6_Mh7-PvTc0NjLtUtW6mSS-yYMTGDrAL5BNK8vYOvtLxXjvNjcCHOcVfzPEiNpU7GvJsZhpA3f_mvcwpVqYTxa8t0qfgTBsFcpJFxOlEvRglzHLHmtjBIRGfVkcFjZXMVZ5oQiMftWzzSDG6MJLeJJ_4wzp6dwAc-bNw5Jg6sljNc5vEA7LsKc3ABiz7QK4FqTn7iY6C99z1ihRpoDiJ7YVfcvh4XcM97XKtxeHg8w'
+                    },
+                    responseType: 'json',
+                    json: { foo: 'bar' }
+                  })
+              })
             })
           })
         })
