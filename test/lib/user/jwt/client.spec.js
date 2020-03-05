@@ -1595,7 +1595,7 @@ describe('~/fb-client/user/jwt/client', () => {
         it('has the expected code', () => {
           try {
             client.throwRequestError('mock code')
-          } catch ({ code }) { // {error: }) {
+          } catch ({ code }) {
             expect(code)
               .to.equal('mock code')
           }
@@ -1604,7 +1604,7 @@ describe('~/fb-client/user/jwt/client', () => {
         it('has the expected message', () => {
           try {
             client.throwRequestError('mock code')
-          } catch ({ message }) { // {error: }) {
+          } catch ({ message }) {
             expect(message)
               .to.equal('mock code')
           }
@@ -1628,7 +1628,7 @@ describe('~/fb-client/user/jwt/client', () => {
         it('has the expected code', () => {
           try {
             client.throwRequestError('mock code', 'mock message')
-          } catch ({ code }) { // {error: }) {
+          } catch ({ code }) {
             expect(code)
               .to.equal('mock code')
           }
@@ -1637,7 +1637,7 @@ describe('~/fb-client/user/jwt/client', () => {
         it('has the expected message', () => {
           try {
             client.throwRequestError('mock code', 'mock message')
-          } catch ({ message }) { // {error: }) {
+          } catch ({ message }) {
             expect(message)
               .to.equal('mock message')
           }
