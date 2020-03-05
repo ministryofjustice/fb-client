@@ -410,9 +410,9 @@ describe('~/fb-client/user/jwt/client', () => {
         getGetStub.restore()
       })
 
-      it('calls the correct url', () => expect(getGetStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('adds the correct x-access-token-v2 header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token-v2']).to.equal('testAccessToken'))
-      it('returns the unencrypted data', () => expect(returnValue).to.eql({ foo: 'bar' }))
+      it('calls the correct url', () => expect(getGetStub.getCall(0).args[0].url).to.equal(microserviceUrl.concat('/user/testUserId')))
+      it('adds the correct `x-access-token-v2` header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token-v2']).to.equal('testAccessToken'))
+      it('returns an object', () => expect(returnValue).to.eql({ foo: 'bar' }))
     })
 
     describe('Without a payload', () => {
@@ -432,8 +432,8 @@ describe('~/fb-client/user/jwt/client', () => {
         getGetStub.restore()
       })
 
-      it('calls the correct url', () => expect(getGetStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('adds the correct x-access-token-v2 header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token-v2']).to.equal('testAccessToken'))
+      it('calls the correct url', () => expect(getGetStub.getCall(0).args[0].url).to.equal(microserviceUrl.concat('/user/testUserId')))
+      it('adds the correct `x-access-token-v2` header', () => expect(getGetStub.getCall(0).args[0].headers['x-access-token-v2']).to.equal('testAccessToken'))
       it('returns an object', () => expect(returnValue).to.eql({}))
     })
   })
@@ -464,8 +464,8 @@ describe('~/fb-client/user/jwt/client', () => {
         generateAccessTokenStub.restore()
       })
 
-      it('calls the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('adds the x-access-token-v2 header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token-v2']).to.equal('accessToken'))
+      it('calls the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(microserviceUrl.concat('/user/testUserId')))
+      it('adds the `x-access-token-v2` header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token-v2']).to.equal('accessToken'))
       it('returns an object', () => expect(returnValue).to.eql({ foo: 'bar' }))
     })
 
@@ -493,8 +493,8 @@ describe('~/fb-client/user/jwt/client', () => {
         generateAccessTokenStub.restore()
       })
 
-      it('calls the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(`${microserviceUrl}/user/testUserId`))
-      it('adds the x-access-token-v2 header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token-v2']).to.equal('accessToken'))
+      it('calls the correct url', () => expect(getPostStub.getCall(0).args[0].url).to.equal(microserviceUrl.concat('/user/testUserId')))
+      it('adds the `x-access-token-v2` header', () => expect(getPostStub.getCall(0).args[0].headers['x-access-token-v2']).to.equal('accessToken'))
       it('returns an object', () => expect(returnValue).to.eql({}))
     })
   })
@@ -583,8 +583,9 @@ describe('~/fb-client/user/jwt/client', () => {
         await client.send('post', {
           url: '/not-found'
         }, { error: () => {} })
-      } catch (e) {
-        expect(e.name).to.equal('ClientError')
+      } catch ({ name, data }) {
+        expect(name).to.equal('ClientError')
+        expect(data).to.be.an('object')
       }
     })
 
@@ -669,8 +670,9 @@ describe('~/fb-client/user/jwt/client', () => {
     it('throws an ‘ENOTFOUND’', async () => {
       try {
         await client.send('get', { url: '/server-error', sendOptions: { retry: 3 } }, { error (e) { return e } })
-      } catch (e) {
-        expect(e.name).to.equal('ClientError')
+      } catch ({ name, data }) {
+        expect(name).to.equal('ClientError')
+        expect(data).to.be.an('object')
       }
     }).timeout(30000)
 
@@ -835,8 +837,8 @@ describe('~/fb-client/user/jwt/client', () => {
                 .reply(201, ' lorem ipsum ')
 
               await client.send('get', { url: '/non-empty-body' })
-            } catch (e) {
-              expect(e.name).to.equal('ClientError')
+            } catch ({ name }) {
+              expect(name).to.equal('ClientError')
             }
           })
         })
@@ -849,8 +851,8 @@ describe('~/fb-client/user/jwt/client', () => {
                 .reply(201, ' lorem ipsum ')
 
               await client.send('post', { url: '/non-empty-body' })
-            } catch (e) {
-              expect(e.name).to.equal('ClientError')
+            } catch ({ name }) {
+              expect(name).to.equal('ClientError')
             }
           })
         })
@@ -865,8 +867,8 @@ describe('~/fb-client/user/jwt/client', () => {
                 .reply(201, '    ')
 
               await client.send('get', { url: '/spaces-body' })
-            } catch (e) {
-              expect(e.name).to.equal('ClientError')
+            } catch ({ name }) {
+              expect(name).to.equal('ClientError')
             }
           })
         })
@@ -879,8 +881,8 @@ describe('~/fb-client/user/jwt/client', () => {
                 .reply(201, '    ')
 
               await client.send('post', { url: '/spaces-body' })
-            } catch (e) {
-              expect(e.name).to.equal('ClientError')
+            } catch ({ name }) {
+              expect(name).to.equal('ClientError')
             }
           })
         })
