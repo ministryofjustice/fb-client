@@ -9,56 +9,52 @@ Base client for requests to endpoints which require a JSON Web Token for authent
 ### Using a client
 
 ``` javascript
-// require the client class
 const FBJWTClient = require('@ministryofjustice/fb-client/user/jwt/client')
 
-// create a client instance
 const jwtClient = new FBJWTClient(serviceSecret, serviceSlug, microserviceUrl, [errorClass])
 ```
 
-#### `serviceSecret`
+#### Service Secret
 
 A `serviceSecret` is _required_.
 
 The constructor will throw an error if no `serviceSecret` is provided.
 
-#### `serviceSlug`
+#### Service Slug
 
 A `serviceSlug` is _required_.
 
 The constructor will throw an error if no `serviceSlug` is provided.
 
-#### `microserviceUrl`
+#### Microservice URL
 
 A `microserviceUrl` is _required_.
 
 The constructor will throw an error if no `microserviceUrl` is provided.
 
-#### `errorClass`
+#### Error Class
 
 An `errorClass` is _optional_.
 
 ### Extending
 
 ``` javascript
-// extend base class
 class FBMyClient extends FBJWTClient {
-  constructor (serviceSecret, serviceSlug, microserviceUrl, myVar) {
+  constructor (serviceSecret, serviceSlug, microserviceUrl, [myVar]) {
     super(serviceSecret, serviceSlug, microserviceUrl)
-    // do something with additional constructor argument
-    this.myVar = myVar
+    this.myVar = myVar // assign the optional constructor argument
   }
 }
 
-const myClient = new FBMyClient('service_secret', 'myservice', 'http://myservice', 'my var')
+const myClient = new FBMyClient('service_secret', 'myservice', 'http://myservice', ['my var'])
 ```
 
 ``` javascript
-// extend base class with custom error
+// a custom error class extending the base error class
+class FBAnotherClientError extends FBJWTClient.prototype.ErrorClass {}
+
 class FBAnotherClient extends FBJWTClient {
   constructor (serviceSecret, serviceSlug, microserviceUrl) {
-    // create custom error class
-    class FBAnotherClientError extends FBJWTClient.prototype.ErrorClass {}
     super(serviceSecret, serviceSlug, microserviceUrl, FBAnotherClientError)
   }
 }
@@ -66,47 +62,47 @@ class FBAnotherClient extends FBJWTClient {
 
 ### Methods
 
-- generateAccessToken
+- `generateAccessToken`
 
   Generate a JWT access token
 
-- createEndpointUrl
+- `createEndpointUrl`
 
   Create the URL for an endpoint
 
-- sendGet
+- `sendGet`
 
   Dispatch `GET` requests to an endpoint
 
-- sendPost
+- `sendPost`
 
   Dispatch `POST` requests to an endpoint
 
-- encrypt
+- `encrypt`
 
   Encrypt data with AES 256
 
-- decrypt
+- `decrypt`
 
   Decrypt data
 
-- encryptUserIdAndToken
+- `encryptUserIdAndToken`
 
   Encrypt the user ID and token using the service secret
 
-- decryptUserIdAndToken
+- `decryptUserIdAndToken`
 
   Decrypt the user ID and token using the service secret
 
-- handleRequestError
+- `handleRequestError`
 
   This function will be invoked with an error an argument when the transaction fails
 
-- createRequestOptions
+- `createRequestOptions`
 
   Create request options, whether `GET` or `POST`
 
-- throwRequestError
+- `throwRequestError`
 
   This function can be invoked to throw request errors
 
@@ -119,10 +115,8 @@ Client for requests to datastore endpoints.
 #### Using a client
 
 ``` javascript
-// load client
 const FBUserDataStoreClient = require('@ministryofjustice/fb-client/user/datastore/client')
 
-// initialise client
 const userDataStoreClient = new FBUserDataStoreClient(serviceSecret, serviceSlug, userDataStoreUrl)
 ```
 
@@ -143,31 +137,35 @@ Client for requests to filestore endpoints.
 #### Using a client
 
 ``` javascript
-// load client
 const FBUserFileStoreClient = require('@ministryofjustice/fb-client/user/filestore/client')
 
-// initialise client
 const userFileStoreClient = new FBUserFileStoreClient(serviceSecret, serviceSlug, userFileStoreUrl)
 ```
 
 #### Fetching and storing
 
+##### Fetching
 ``` javascript
 // fetch user file
 const userFile = await userFileStoreClient.fetch(userId, userToken, fingerprint)
-// userFile => { file }
+```
 
-// With the policy defined
+##### Storing
+
+Define a policy:
+
+``` javascript
 const policy = { [max_size], [expires], [allowed_types] }
+```
 
-let uploadDetails
+Either:
+``` javascript
+// store user file from file data
+const uploadDetails = await userFileStoreClient.store(userId, userToken, file, policy)
+```
 
-// Either
-// store user file
-uploadDetails = await userFileStoreClient.store(userId, userToken, file, policy)
-// uploadDetails => { fingerpint, url, size, type, date }
-
-// Or
+Or:
+``` javascript
 // store user file from file path
-uploadDetails = await userFileStoreClient.storeFromPath(userId, userToken, filePath, policy)
+const uploadDetails = await userFileStoreClient.storeFromPath(userId, userToken, filePath, policy)
 ```
