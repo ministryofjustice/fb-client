@@ -1569,6 +1569,37 @@ describe('~/fb-client/user/jwt/client', () => {
             })
           })
         })
+
+        describe('There is a nested response object', () => {
+          describe('There are name and code fields in the response body object', () => {
+            it('throws a request error with the code and message from the response body object', () => {
+              const errorResponse = {
+                response: {
+                  body: {
+                    code: 400,
+                    name: 'accept' // 'accept' used for unsupported file type validations ¯\_(ツ)_/¯
+                  }
+                }
+              }
+              client.handleRequestError({}, errorResponse)
+
+              expect(throwRequestErrorStub).to.be.calledWith(400, 'accept')
+            })
+          })
+
+          describe('There are no name or code fields in the response body object', () => {
+            it('throws a request error with the default values', () => {
+              const errorResponse = {
+                response: {
+                  body: {}
+                }
+              }
+              client.handleRequestError({}, errorResponse)
+
+              expect(throwRequestErrorStub).to.be.calledWith(500, 'ENOERROR')
+            })
+          })
+        })
       })
     })
   })
