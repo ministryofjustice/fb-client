@@ -156,12 +156,11 @@ describe('~/fb-client/submitter/client', () => {
     let client
     let sendPostStub
     let encryptUserIdAndTokenStub
-    let encryptSubmission
 
     const mockUserId = 'mock user id'
     const mockUserToken = 'mock user token'
     const encodedPrivateKey = 'encryped private key'
-    const submissionEncryptionKey = 'submission encryption key'
+    const submissionEncryptionKey = '78458387-9846-4602-acca-9d82e9d8'
 
     let mockSubmission
     let mockLogger
@@ -172,7 +171,6 @@ describe('~/fb-client/submitter/client', () => {
       client = new SubmitterClient(serviceSecret, serviceSlug, submitterUrl, encodedPrivateKey, submissionEncryptionKey)
       sendPostStub = sinon.stub(client, 'sendPost').returns({ payload: 'mock payload' })
       encryptUserIdAndTokenStub = sinon.stub(client, 'encryptUserIdAndToken').returns('mock encrypted user id and token payload')
-      encryptSubmission = sinon.stub(client, 'encrypt').returns('encrypted submission')
 
       mockSubmission = {}
       mockLogger = {}
@@ -187,7 +185,6 @@ describe('~/fb-client/submitter/client', () => {
 
     it('calls `encryptUserIdAndToken`', () => {
       expect(encryptUserIdAndTokenStub).to.be.calledWith('mock user id', 'mock user token')
-      expect(encryptSubmission).to.be.calledWith(submissionEncryptionKey, mockSubmission)
     })
 
     it('calls `sendPost`', () => {
@@ -196,7 +193,7 @@ describe('~/fb-client/submitter/client', () => {
         payload: {
           encrypted_user_id_and_token: 'mock encrypted user id and token payload',
           service_slug: 'testServiceSlug',
-          encrypted_submission: 'encrypted submission'
+          encrypted_submission: 'DYw='
         },
         subject: 'mock user id'
       }, mockLogger)
