@@ -18,11 +18,11 @@
   },
   "license": "MIT",
   "dependencies": {
-    "aes256": "^1.0.4",
-    "debug": "^4.1.1",
+    "aes256": "^1.1.0",
+    "debug": "^4.3.4",
     "got": "10.7.0",
     "jsonwebtoken": "^8.5.1",
-    "path-to-regexp": "^6.1.0"
+    "path-to-regexp": "^6.2.1"
   },
   "devDependencies": {
     "@ministryofjustice/module-alias": "^1.1.0",
