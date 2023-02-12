@@ -20,7 +20,7 @@
   "dependencies": {
     "aes256": "^1.1.0",
     "debug": "^4.3.4",
-    "got": "10.7.0",
+    "got": "12.5.3",
     "jsonwebtoken": "^9.0.0",
     "path-to-regexp": "^6.2.1"
   },
